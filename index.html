@@ -161,16 +161,24 @@
     }
 
     .panel-toggle {
-      width: 100%;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
       padding: 14px 16px;
+    }
+
+    .panel-toggle-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
       background: transparent;
       border: 0;
       font-weight: 800;
       text-align: left;
+      padding: 0;
     }
 
     .panel-toggle .toggle-meta {
@@ -261,6 +269,11 @@
     .action.primary {
       background: linear-gradient(180deg, #ffb15b, #ff8a3d);
       color: #fff;
+    }
+
+    .action.secondary {
+      background: linear-gradient(180deg, #f7fbff, #e8f2ff);
+      color: #35516a;
     }
 
     .switch {
@@ -402,6 +415,29 @@
       margin-bottom: 16px;
     }
 
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .section-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .mini-action {
+      background: transparent;
+      border: 0;
+      color: var(--muted);
+      font-weight: 700;
+      padding: 0;
+    }
+
     .quiz-word {
       margin: 12px 0;
       font-size: 32px;
@@ -431,6 +467,10 @@
       color: var(--muted);
       font-weight: 700;
       padding: 0;
+    }
+
+    .solo-hidden {
+      display: none !important;
     }
 
     .word-list {
@@ -540,14 +580,17 @@
       </div>
 
       <div class="controls">
-        <div class="panel collapsible" id="settingsPanel">
-          <button class="panel-toggle" id="settingsSummary" type="button">
-            <span>
-              学习设置
-              <span class="toggle-meta">搜索、分类、发音和显示规则</span>
-            </span>
-            <span class="toggle-icon">▾</span>
-          </button>
+        <div class="panel collapsible focusable-section" id="settingsPanel">
+          <div class="panel-toggle">
+            <button class="panel-toggle-btn" id="settingsSummary" type="button">
+              <span>
+                学习设置
+                <span class="toggle-meta">搜索、分类、发音和显示规则</span>
+              </span>
+              <span class="toggle-icon">▾</span>
+            </button>
+            <button class="mini-action" id="focusSettingsBtn" type="button">只看此板块</button>
+          </div>
           <div class="panel-body">
             <div class="search" style="margin-top: 14px;">
               <input id="searchInput" type="text" placeholder="搜索英文或中文，例如 school / 衣服" />
@@ -568,8 +611,11 @@
     </section>
 
     <section class="stage">
-      <article class="card">
-        <span class="ribbon" id="categoryLabel">分类</span>
+      <article class="card focusable-section" id="cardSection">
+        <div class="section-header">
+          <span class="ribbon" id="categoryLabel">分类</span>
+          <button class="mini-action" id="focusCardBtn" type="button">只看此板块</button>
+        </div>
         <div class="scene" id="scene">
           <div class="emoji" id="emojiBox">📘</div>
         </div>
@@ -587,8 +633,11 @@
       </article>
 
       <aside class="side">
-        <div class="quiz-box">
-          <h3>小测验</h3>
+        <div class="quiz-box focusable-section" id="quizSection">
+          <div class="section-header">
+            <h3>小测验</h3>
+            <button class="mini-action" id="focusQuizBtn" type="button">只看此板块</button>
+          </div>
           <div class="quiz-word" id="quizWord">按“来一题小测验”开始</div>
           <div class="button-row">
             <button class="action" id="quizBtn">来一题</button>
@@ -596,12 +645,19 @@
             <button class="action" id="speakQuizBtn">朗读题目</button>
           </div>
           <p class="quiz-answer" id="quizAnswer"></p>
+          <label class="switch">
+            <input id="autoSpeakQuiz" type="checkbox" checked />
+            <span>新题默认发音</span>
+          </label>
         </div>
 
-        <div class="panel list-panel">
+        <div class="panel list-panel focusable-section" id="listSection">
           <div class="list-header">
             <h3>当前词表</h3>
-            <button class="list-toggle" id="toggleWordListBtn" type="button">收起</button>
+            <div class="section-actions">
+              <button class="mini-action" id="focusListBtn" type="button">只看此板块</button>
+              <button class="list-toggle" id="toggleWordListBtn" type="button">收起</button>
+            </div>
           </div>
           <div class="word-list" id="wordList"></div>
           <p class="footer-tip">发音使用浏览器内置 `speechSynthesis`。如果第一次没出声，先点一次“发音”，浏览器通常会初始化语音权限。</p>
@@ -659,12 +715,20 @@
     const categoryChips = document.getElementById("categoryChips");
     const wordList = document.getElementById("wordList");
     const autoSpeak = document.getElementById("autoSpeak");
+    const autoSpeakQuiz = document.getElementById("autoSpeakQuiz");
     const alwaysShowMeaning = document.getElementById("alwaysShowMeaning");
     const listPanel = document.querySelector(".list-panel");
     const toggleWordListBtn = document.getElementById("toggleWordListBtn");
     const settingsPanel = document.getElementById("settingsPanel");
     const settingsSummary = document.getElementById("settingsSummary");
     const toggleSettingsBtn = document.getElementById("toggleSettingsBtn");
+    const focusSettingsBtn = document.getElementById("focusSettingsBtn");
+    const focusCardBtn = document.getElementById("focusCardBtn");
+    const focusQuizBtn = document.getElementById("focusQuizBtn");
+    const focusListBtn = document.getElementById("focusListBtn");
+    const cardSection = document.getElementById("cardSection");
+    const quizSection = document.getElementById("quizSection");
+    const listSection = document.getElementById("listSection");
 
     const totalCount = document.getElementById("totalCount");
     const shownCount = document.getElementById("shownCount");
@@ -689,6 +753,7 @@
     let cachedVoices = [];
     let settingsOpen = false;
     let wordListOpen = true;
+    let soloSection = null;
 
     function setSettingsOpen(open) {
       settingsOpen = open;
@@ -700,6 +765,22 @@
       wordListOpen = open;
       listPanel.classList.toggle("collapsed", !wordListOpen);
       toggleWordListBtn.textContent = wordListOpen ? "收起" : "展开";
+    }
+
+    function updateSoloButtons() {
+      focusSettingsBtn.textContent = soloSection === "settings" ? "显示全部" : "只看此板块";
+      focusCardBtn.textContent = soloSection === "card" ? "显示全部" : "只看此板块";
+      focusQuizBtn.textContent = soloSection === "quiz" ? "显示全部" : "只看此板块";
+      focusListBtn.textContent = soloSection === "list" ? "显示全部" : "只看此板块";
+    }
+
+    function setSoloSection(section) {
+      soloSection = soloSection === section ? null : section;
+      settingsPanel.classList.toggle("solo-hidden", !!soloSection && soloSection !== "settings");
+      cardSection.classList.toggle("solo-hidden", !!soloSection && soloSection !== "card");
+      quizSection.classList.toggle("solo-hidden", !!soloSection && soloSection !== "quiz");
+      listSection.classList.toggle("solo-hidden", !!soloSection && soloSection !== "list");
+      updateSoloButtons();
     }
 
     function syncMeaningMode(resetIfNeeded = false) {
@@ -873,6 +954,7 @@
       quizAnswer.textContent = "";
       quizAnswer.dataset.answer = `${item.zh} ${item.phonetic}`;
       quizAnswer.dataset.word = item.en;
+      if (autoSpeakQuiz.checked) speak(item.en);
     }
 
     searchInput.addEventListener("input", (event) => {
@@ -893,6 +975,22 @@
 
     toggleSettingsBtn.addEventListener("click", () => {
       setSettingsOpen(!settingsOpen);
+    });
+
+    focusSettingsBtn.addEventListener("click", () => {
+      setSoloSection("settings");
+    });
+
+    focusCardBtn.addEventListener("click", () => {
+      setSoloSection("card");
+    });
+
+    focusQuizBtn.addEventListener("click", () => {
+      setSoloSection("quiz");
+    });
+
+    focusListBtn.addEventListener("click", () => {
+      setSoloSection("list");
     });
 
     toggleWordListBtn.addEventListener("click", () => {
@@ -939,6 +1037,7 @@
     syncMeaningMode();
     setSettingsOpen(false);
     setWordListOpen(true);
+    updateSoloButtons();
     if (voicesReady) {
       setTimeout(maybeSpeakCurrent, 500);
     }
