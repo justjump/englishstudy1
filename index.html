@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>小朋友背单词乐园</title>
+  <style>
+    :root {
+      --bg: #fff9ef;
+      --panel: rgba(255, 255, 255, 0.82);
+      --ink: #1e2b3a;
+      --muted: #5d6a78;
+      --orange: #ff8a3d;
+      --yellow: #ffd45b;
+      --green: #7cd992;
+      --blue: #77b8ff;
+      --pink: #ff93b6;
+      --line: rgba(30, 43, 58, 0.12);
+      --shadow: 0 24px 60px rgba(255, 138, 61, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(255, 212, 91, 0.75), transparent 30%),
+        radial-gradient(circle at top right, rgba(119, 184, 255, 0.65), transparent 28%),
+        radial-gradient(circle at bottom left, rgba(255, 147, 182, 0.45), transparent 25%),
+        linear-gradient(180deg, #fff7df 0%, #fffdf7 100%);
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: auto;
+      border-radius: 999px;
+      opacity: 0.18;
+      pointer-events: none;
+      filter: blur(3px);
+    }
+
+    body::before {
+      width: 220px;
+      height: 220px;
+      top: 90px;
+      left: -80px;
+      background: repeating-radial-gradient(circle, #ff8a3d 0 16px, transparent 16px 32px);
+      transform: rotate(18deg);
+    }
+
+    body::after {
+      width: 260px;
+      height: 260px;
+      right: -100px;
+      bottom: 70px;
+      background: repeating-linear-gradient(45deg, #77b8ff 0 16px, transparent 16px 32px);
+    }
+
+    .page {
+      width: min(980px, calc(100% - 24px));
+      margin: 18px auto 28px;
+    }
+
+    .hero {
+      padding: 20px;
+      border: 3px solid rgba(30, 43, 58, 0.08);
+      border-radius: 26px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.86), rgba(255,248,230,0.86));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: #fff;
+      border: 2px solid rgba(30, 43, 58, 0.08);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    h1 {
+      margin: 10px 0 8px;
+      font-size: clamp(32px, 5vw, 52px);
+      line-height: 1;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 620px;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(92px, 1fr));
+      gap: 10px;
+      min-width: min(100%, 290px);
+    }
+
+    .stat {
+      padding: 14px 10px;
+      border-radius: 18px;
+      background: #fff;
+      border: 2px solid rgba(30, 43, 58, 0.08);
+      text-align: center;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 24px;
+      margin-bottom: 4px;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .panel {
+      padding: 16px;
+      border-radius: 20px;
+      background: var(--panel);
+      border: 2px solid rgba(30, 43, 58, 0.08);
+    }
+
+    .search {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .search input {
+      flex: 1;
+      min-width: 180px;
+      border: 2px solid rgba(30, 43, 58, 0.12);
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-size: 16px;
+      background: rgba(255, 255, 255, 0.92);
+      color: var(--ink);
+      outline: none;
+    }
+
+    .chip-row,
+    .button-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      font: inherit;
+      color: var(--ink);
+      transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+    }
+
+    .chip,
+    .action {
+      border-radius: 999px;
+      padding: 10px 15px;
+      font-weight: 700;
+    }
+
+    .chip {
+      background: rgba(255,255,255,0.92);
+      border: 2px solid rgba(30, 43, 58, 0.08);
+    }
+
+    .chip.active {
+      background: var(--yellow);
+    }
+
+    .action {
+      background: linear-gradient(180deg, #ffffff, #fff2d2);
+      border: 2px solid rgba(30, 43, 58, 0.1);
+      box-shadow: 0 8px 18px rgba(255, 138, 61, 0.12);
+    }
+
+    .action.primary {
+      background: linear-gradient(180deg, #ffb15b, #ff8a3d);
+      color: #fff;
+    }
+
+    .switch {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .switch input {
+      width: 20px;
+      height: 20px;
+    }
+
+    .stage {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 280px;
+      gap: 14px;
+      margin-top: 14px;
+      align-items: start;
+    }
+
+    .card {
+      position: relative;
+      min-height: 560px;
+      border-radius: 28px;
+      overflow: hidden;
+      padding: 22px;
+      background: linear-gradient(160deg, rgba(255,255,255,0.98), rgba(255,247,221,0.98));
+      border: 3px solid rgba(30, 43, 58, 0.08);
+      box-shadow: var(--shadow);
+    }
+
+    .ribbon {
+      position: absolute;
+      right: 20px;
+      top: 18px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #fff;
+      border: 2px solid rgba(30, 43, 58, 0.08);
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--muted);
+    }
+
+    .scene {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-height: 260px;
+      margin-bottom: 20px;
+      border-radius: 24px;
+      overflow: hidden;
+      background: var(--scene-bg, linear-gradient(135deg, #dff4ff, #fef2c5));
+    }
+
+    .scene::before,
+    .scene::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.22;
+    }
+
+    .scene::before {
+      width: 180px;
+      height: 180px;
+      background: #fff;
+      top: -50px;
+      right: -36px;
+    }
+
+    .scene::after {
+      width: 120px;
+      height: 120px;
+      background: rgba(255,255,255,0.65);
+      bottom: -30px;
+      left: -10px;
+    }
+
+    .emoji {
+      position: relative;
+      z-index: 1;
+      font-size: clamp(96px, 18vw, 150px);
+      filter: drop-shadow(0 12px 18px rgba(30, 43, 58, 0.16));
+      animation: floaty 2.8s ease-in-out infinite;
+      user-select: none;
+    }
+
+    @keyframes floaty {
+      0%, 100% { transform: translateY(0px) rotate(-3deg); }
+      50% { transform: translateY(-10px) rotate(3deg); }
+    }
+
+    .word {
+      font-size: clamp(56px, 7vw, 88px);
+      line-height: 1;
+      margin: 8px 0 0;
+    }
+
+    .phonetic {
+      margin: 8px 0 18px;
+      font-size: 22px;
+      color: #507087;
+      font-weight: 700;
+    }
+
+    .meaning {
+      font-size: 32px;
+      line-height: 1.5;
+      margin: 0 0 18px;
+      min-height: 96px;
+    }
+
+    .mini-note {
+      display: inline-block;
+      padding: 10px 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.78);
+      border: 2px dashed rgba(30, 43, 58, 0.12);
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .side h3,
+    .list-panel h3 {
+      margin: 0 0 12px;
+      font-size: 18px;
+    }
+
+    .quiz-box {
+      padding: 16px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(124, 217, 146, 0.24), rgba(255, 255, 255, 0.8));
+      border: 2px solid rgba(30, 43, 58, 0.08);
+      margin-bottom: 16px;
+    }
+
+    .quiz-word {
+      margin: 12px 0;
+      font-size: 32px;
+      font-weight: 900;
+    }
+
+    .quiz-answer {
+      min-height: 26px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .list-panel {
+      margin-top: 0;
+    }
+
+    .word-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 12px;
+      max-height: 420px;
+      overflow: auto;
+    }
+
+    .word-pill {
+      text-align: left;
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.92);
+      border: 2px solid rgba(30, 43, 58, 0.08);
+    }
+
+    .word-pill.active {
+      background: #ffe69d;
+      border-color: rgba(255, 138, 61, 0.24);
+    }
+
+    .word-pill strong {
+      display: block;
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+
+    .footer-tip {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 900px) {
+      .stage {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        width: 100%;
+      }
+
+      .card {
+        min-height: auto;
+      }
+
+      .word-list {
+        max-height: none;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .page {
+        width: min(100% - 16px, 1120px);
+        margin: 16px auto 28px;
+      }
+
+      .hero,
+      .card,
+      .panel {
+        padding: 18px;
+        border-radius: 22px;
+      }
+
+      .meaning {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="hero-top">
+        <div>
+          <span class="badge">识别自图片 40 个单词</span>
+          <h1>小朋友背单词乐园</h1>
+          <p>先看英文，先听发音，先自己猜中文。点一下再看答案，学习会更像小游戏。</p>
+        </div>
+        <div class="stats">
+          <div class="stat">
+            <strong id="totalCount">40</strong>
+            <span>总单词</span>
+          </div>
+          <div class="stat">
+            <strong id="shownCount">40</strong>
+            <span>当前显示</span>
+          </div>
+          <div class="stat">
+            <strong id="currentIndexLabel">1 / 40</strong>
+            <span>学习进度</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="panel">
+          <div class="search">
+            <input id="searchInput" type="text" placeholder="搜索英文或中文，例如 school / 衣服" />
+          </div>
+          <div class="chip-row" id="categoryChips"></div>
+          <label class="switch">
+            <input id="autoSpeak" type="checkbox" checked />
+            <span>切换单词时自动朗读英文</span>
+          </label>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="stage">
+      <article class="card">
+        <span class="ribbon" id="categoryLabel">分类</span>
+        <div class="scene" id="scene">
+          <div class="emoji" id="emojiBox">📘</div>
+        </div>
+        <h2 class="word" id="wordText">work</h2>
+        <div class="phonetic" id="phoneticText">/w3:k/</div>
+        <p class="meaning" id="meaningText">（花费时间和精力）做（某事）；工作</p>
+        <div class="mini-note" id="hintText">点“发音”听单词，点“显示/隐藏中文”练记忆。</div>
+        <div class="button-row" style="margin-top: 20px;">
+          <button class="action" id="prevBtn">上一个</button>
+          <button class="action primary" id="speakBtn">发音</button>
+          <button class="action" id="nextBtn">下一个</button>
+          <button class="action" id="randomBtn">随机抽词</button>
+          <button class="action" id="flipBtn">看答案</button>
+        </div>
+      </article>
+
+      <aside class="side">
+        <div class="quiz-box">
+          <h3>小测验</h3>
+          <div class="quiz-word" id="quizWord">按“来一题小测验”开始</div>
+          <div class="button-row">
+            <button class="action" id="quizBtn">来一题</button>
+            <button class="action primary" id="showQuizAnswerBtn">显示答案</button>
+            <button class="action" id="speakQuizBtn">朗读题目</button>
+          </div>
+          <p class="quiz-answer" id="quizAnswer"></p>
+        </div>
+
+        <div class="panel list-panel">
+          <h3>当前词表</h3>
+          <div class="word-list" id="wordList"></div>
+          <p class="footer-tip">发音使用浏览器内置 `speechSynthesis`。如果第一次没出声，先点一次“发音”，浏览器通常会初始化语音权限。</p>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const words = [
+      { id: 41, en: "work", zh: "（花费时间和精力）做（某事）；工作", phonetic: "/w3:k/", category: "日常动作", emoji: "💼", scene: "linear-gradient(135deg, #ffe0b5, #ffd45b)", hint: "想一想大人去工作，或者你认真做作业。"},
+      { id: 42, en: "think", zh: "想；思考", phonetic: "/θɪŋk/", category: "日常动作", emoji: "🤔", scene: "linear-gradient(135deg, #d9ebff, #bde0ff)", hint: "小脑袋转一转，就是 think。"},
+      { id: 43, en: "hard", zh: "努力地；费力地", phonetic: "/hɑːd/", category: "日常动作", emoji: "💪", scene: "linear-gradient(135deg, #ffd6d6, #ffb36a)", hint: "认真用力做事情，就是 hard。"},
+      { id: 44, en: "follow", zh: "遵循；听从", phonetic: "/ˈfɒləʊ/", category: "日常动作", emoji: "🚶", scene: "linear-gradient(135deg, #dff6df, #b7efc5)", hint: "跟着老师或爸爸妈妈一起做。"},
+      { id: 45, en: "feel", zh: "觉得；感到", phonetic: "/fiːl/", category: "日常动作", emoji: "❤️", scene: "linear-gradient(135deg, #ffd7ef, #ffc1d6)", hint: "开心、难过、冷或热，都是 feel。"},
+      { id: 46, en: "over", zh: "结束（的）", phonetic: "/ˈəʊvə(r)/", category: "日常动作", emoji: "🏁", scene: "linear-gradient(135deg, #d8f1ff, #f8e8a6)", hint: "比赛结束啦，可以说 it is over。"},
+      { id: 47, en: "kid", zh: "小孩", phonetic: "/kɪd/", category: "人物生活", emoji: "🧒", scene: "linear-gradient(135deg, #ffe7bc, #ffd2e1)", hint: "小朋友就是 kid。"},
+      { id: 48, en: "dinner", zh: "正餐；晚餐", phonetic: "/ˈdɪnə(r)/", category: "人物生活", emoji: "🍽️", scene: "linear-gradient(135deg, #fff2c8, #ffd39f)", hint: "晚上吃饭时，就是 dinner。"},
+      { id: 49, en: "art", zh: "美术；艺术", phonetic: "/ɑːt/", category: "学校生活", emoji: "🎨", scene: "linear-gradient(135deg, #d8f4ff, #ffd6f0)", hint: "画画、做手工，都和 art 有关。"},
+      { id: 50, en: "lunch", zh: "午餐", phonetic: "/lʌntʃ/", category: "人物生活", emoji: "🥪", scene: "linear-gradient(135deg, #fff0be, #ffcf96)", hint: "中午吃的那一餐叫 lunch。"},
+      { id: 51, en: "maths", zh: "数学", phonetic: "/mæθs/", category: "学校生活", emoji: "➕", scene: "linear-gradient(135deg, #d6efff, #b0d7ff)", hint: "加减乘除就是 maths。"},
+      { id: 52, en: "get up", zh: "起床", phonetic: "/get ʌp/", category: "日常动作", emoji: "⏰", scene: "linear-gradient(135deg, #ffe3b3, #fff3da)", hint: "早上从床上起来，就是 get up。"},
+      { id: 53, en: "go to school", zh: "上学", phonetic: "/gəʊ tə skuːl/", category: "学校生活", emoji: "🏫", scene: "linear-gradient(135deg, #d7f7e3, #cce0ff)", hint: "背上书包去学校。"},
+      { id: 54, en: "go home", zh: "回家", phonetic: "/gəʊ həʊm/", category: "日常动作", emoji: "🏠", scene: "linear-gradient(135deg, #ffe1bf, #ffcdd7)", hint: "放学以后回家，就是 go home。"},
+      { id: 55, en: "go to bed", zh: "上床睡觉", phonetic: "/gəʊ tə bed/", category: "日常动作", emoji: "🛏️", scene: "linear-gradient(135deg, #dce2ff, #ffd8ee)", hint: "晚上钻进被窝睡觉。"},
+      { id: 56, en: "want", zh: "想要", phonetic: "/wɒnt/", category: "日常动作", emoji: "⭐", scene: "linear-gradient(135deg, #fff0b0, #ffd0a8)", hint: "我想要一个玩具，可以说 I want a toy。"},
+      { id: 57, en: "clock", zh: "时钟", phonetic: "/klɒk/", category: "物品时间", emoji: "🕒", scene: "linear-gradient(135deg, #daf0ff, #ffe7aa)", hint: "墙上会走的钟就是 clock。"},
+      { id: 58, en: "just", zh: "只是；仅仅；正要", phonetic: "/dʒʌst/", category: "常用词", emoji: "✨", scene: "linear-gradient(135deg, #fff0d8, #fff8ec)", hint: "just 常常表示‘只是’。"},
+      { id: 59, en: "minute", zh: "分钟", phonetic: "/ˈmɪnɪt/", category: "物品时间", emoji: "⏱️", scene: "linear-gradient(135deg, #d5eeff, #bfe4ff)", hint: "一分钟很短，minute。"},
+      { id: 60, en: "trousers", zh: "裤子", phonetic: "/ˈtraʊzəz/", category: "衣物购物", emoji: "👖", scene: "linear-gradient(135deg, #d8ecff, #c7d7ff)", hint: "长裤就是 trousers。"},
+      { id: 61, en: "pair", zh: "一条；一副", phonetic: "/peə(r)/", category: "衣物购物", emoji: "🧦", scene: "linear-gradient(135deg, #fff2d2, #ffe0f3)", hint: "两只一起配成一对，就是 a pair。"},
+      { id: 62, en: "clothes", zh: "衣服；服装", phonetic: "/kləʊðz/", category: "衣物购物", emoji: "👕", scene: "linear-gradient(135deg, #fff0be, #ffd7cf)", hint: "穿在身上的统称 clothes。"},
+      { id: 63, en: "shorts", zh: "短裤", phonetic: "/ʃɔːts/", category: "衣物购物", emoji: "🩳", scene: "linear-gradient(135deg, #ffe1c1, #fff0a6)", hint: "夏天常穿的短裤。"},
+      { id: 64, en: "jacket", zh: "夹克衫", phonetic: "/ˈdʒækɪt/", category: "衣物购物", emoji: "🧥", scene: "linear-gradient(135deg, #dfe8ff, #c9efff)", hint: "外面穿的一件 jacket。"},
+      { id: 65, en: "skirt", zh: "裙子", phonetic: "/skɜːt/", category: "衣物购物", emoji: "👗", scene: "linear-gradient(135deg, #ffd7ef, #ffecbe)", hint: "裙子就是 skirt。"},
+      { id: 66, en: "dear", zh: "天哪", phonetic: "/dɪə(r)/", category: "常用词", emoji: "😮", scene: "linear-gradient(135deg, #ffe4be, #ffd6d6)", hint: "表示惊讶时会说 oh dear。"},
+      { id: 67, en: "expensive", zh: "昂贵的；价格高的", phonetic: "/ɪkˈspensɪv/", category: "衣物购物", emoji: "💎", scene: "linear-gradient(135deg, #d7e6ff, #edf4ff)", hint: "价格很高，就是 expensive。"},
+      { id: 68, en: "take", zh: "买下", phonetic: "/teɪk/", category: "衣物购物", emoji: "🛍️", scene: "linear-gradient(135deg, #fff2c8, #ffcfd8)", hint: "买这个吧，I will take it。"},
+      { id: 69, en: "cheap", zh: "便宜的", phonetic: "/tʃiːp/", category: "衣物购物", emoji: "🏷️", scene: "linear-gradient(135deg, #dff5d6, #fff3bf)", hint: "不贵，很便宜，就是 cheap。"},
+      { id: 70, en: "shoe", zh: "鞋", phonetic: "/ʃuː/", category: "衣物购物", emoji: "👟", scene: "linear-gradient(135deg, #dcecff, #ffe3bf)", hint: "脚上穿的 shoe。"},
+      { id: 71, en: "beautiful", zh: "美丽的", phonetic: "/ˈbjuːtɪfl/", category: "常用词", emoji: "🌸", scene: "linear-gradient(135deg, #ffd9eb, #fff1c0)", hint: "漂亮、美丽，就是 beautiful。"},
+      { id: 72, en: "hat", zh: "帽子", phonetic: "/hæt/", category: "衣物购物", emoji: "🧢", scene: "linear-gradient(135deg, #d9f0ff, #fff0ba)", hint: "头上戴的帽子。"},
+      { id: 73, en: "sunglasses", zh: "太阳镜；墨镜", phonetic: "/ˈsʌnɡlɑːsɪz/", category: "衣物购物", emoji: "🕶️", scene: "linear-gradient(135deg, #d6f3ff, #bfe0ff)", hint: "太阳很大时戴 sunglasses。"},
+      { id: 74, en: "free", zh: "免费的", phonetic: "/friː/", category: "衣物购物", emoji: "🎁", scene: "linear-gradient(135deg, #e1ffd9, #fff3b5)", hint: "不用花钱，就是 free。"},
+      { id: 75, en: "large", zh: "大型号的", phonetic: "/lɑːdʒ/", category: "衣物购物", emoji: "📦", scene: "linear-gradient(135deg, #ffebc4, #ffd8a8)", hint: "很大号，可以说 large。"},
+      { id: 76, en: "size", zh: "尺码；号", phonetic: "/saɪz/", category: "衣物购物", emoji: "📏", scene: "linear-gradient(135deg, #d7eaff, #e3f8ff)", hint: "衣服鞋子的号码叫 size。"},
+      { id: 77, en: "list", zh: "清单；目录", phonetic: "/lɪst/", category: "常用词", emoji: "📝", scene: "linear-gradient(135deg, #fff5cf, #e0f2ff)", hint: "把东西写成一张 list。"},
+      { id: 78, en: "try on", zh: "试穿", phonetic: "/traɪ ɒn/", category: "衣物购物", emoji: "🪞", scene: "linear-gradient(135deg, #ffdfe8, #f3efff)", hint: "买衣服前先 try on。"},
+      { id: 79, en: "any", zh: "任何的；任一的", phonetic: "/ˈeni/", category: "常用词", emoji: "🎲", scene: "linear-gradient(135deg, #dff0ff, #fff0c0)", hint: "任何一个，都可以用 any。"},
+      { id: 80, en: "cow", zh: "奶牛", phonetic: "/kaʊ/", category: "动物", emoji: "🐄", scene: "linear-gradient(135deg, #f5f5f5, #ffeec4)", hint: "会哞哞叫的 cow。"}
+    ];
+
+    const categories = ["全部", ...new Set(words.map(item => item.category))];
+    const searchInput = document.getElementById("searchInput");
+    const categoryChips = document.getElementById("categoryChips");
+    const wordList = document.getElementById("wordList");
+    const autoSpeak = document.getElementById("autoSpeak");
+
+    const totalCount = document.getElementById("totalCount");
+    const shownCount = document.getElementById("shownCount");
+    const currentIndexLabel = document.getElementById("currentIndexLabel");
+    const categoryLabel = document.getElementById("categoryLabel");
+    const scene = document.getElementById("scene");
+    const emojiBox = document.getElementById("emojiBox");
+    const wordText = document.getElementById("wordText");
+    const phoneticText = document.getElementById("phoneticText");
+    const meaningText = document.getElementById("meaningText");
+    const hintText = document.getElementById("hintText");
+
+    const quizWord = document.getElementById("quizWord");
+    const quizAnswer = document.getElementById("quizAnswer");
+
+    let selectedCategory = "全部";
+    let keyword = "";
+    let filteredWords = [...words];
+    let currentIndex = 0;
+    let meaningVisible = false;
+    let voicesReady = false;
+    let cachedVoices = [];
+
+    function setupVoices() {
+      cachedVoices = window.speechSynthesis ? speechSynthesis.getVoices() : [];
+      voicesReady = cachedVoices.length > 0;
+    }
+
+    if ("speechSynthesis" in window) {
+      setupVoices();
+      speechSynthesis.onvoiceschanged = setupVoices;
+    }
+
+    function getBestVoice() {
+      if (!cachedVoices.length) return null;
+      return (
+        cachedVoices.find(v => /en-(gb|us)/i.test(v.lang) && /Google|Samantha|Daniel|Serena/i.test(v.name)) ||
+        cachedVoices.find(v => /en/i.test(v.lang)) ||
+        cachedVoices[0]
+      );
+    }
+
+    function speak(text) {
+      if (!("speechSynthesis" in window)) {
+        alert("当前浏览器不支持语音朗读。建议用 Chrome 打开。");
+        return;
+      }
+      const utterance = new SpeechSynthesisUtterance(text);
+      const voice = getBestVoice();
+      if (voice) utterance.voice = voice;
+      utterance.lang = voice?.lang || "en-US";
+      utterance.rate = 0.86;
+      utterance.pitch = 1.05;
+      utterance.volume = 1;
+      speechSynthesis.cancel();
+      speechSynthesis.speak(utterance);
+    }
+
+    function normalize(value) {
+      return value.toLowerCase().trim();
+    }
+
+    function getFilteredWords() {
+      const q = normalize(keyword);
+      return words.filter(item => {
+        const categoryOk = selectedCategory === "全部" || item.category === selectedCategory;
+        const searchOk = !q || item.en.toLowerCase().includes(q) || item.zh.includes(q) || item.phonetic.toLowerCase().includes(q);
+        return categoryOk && searchOk;
+      });
+    }
+
+    function updateStats() {
+      totalCount.textContent = words.length;
+      shownCount.textContent = filteredWords.length;
+      currentIndexLabel.textContent = filteredWords.length ? `${currentIndex + 1} / ${filteredWords.length}` : "0 / 0";
+    }
+
+    function renderCategoryChips() {
+      categoryChips.innerHTML = "";
+      categories.forEach(category => {
+        const chip = document.createElement("button");
+        chip.className = `chip${selectedCategory === category ? " active" : ""}`;
+        chip.textContent = category;
+        chip.addEventListener("click", () => {
+          selectedCategory = category;
+          filteredWords = getFilteredWords();
+          currentIndex = 0;
+          renderAll();
+        });
+        categoryChips.appendChild(chip);
+      });
+    }
+
+    function renderWordList() {
+      wordList.innerHTML = "";
+      if (!filteredWords.length) {
+        const empty = document.createElement("div");
+        empty.className = "mini-note";
+        empty.textContent = "没有找到匹配的单词，试试换个关键词。";
+        wordList.appendChild(empty);
+        return;
+      }
+
+      filteredWords.forEach((item, index) => {
+        const button = document.createElement("button");
+        button.className = `word-pill${index === currentIndex ? " active" : ""}`;
+        button.innerHTML = `<strong>${item.en}</strong><span>${item.zh}</span>`;
+        button.addEventListener("click", () => {
+          currentIndex = index;
+          renderCard();
+          renderWordList();
+          updateStats();
+          maybeSpeakCurrent();
+        });
+        wordList.appendChild(button);
+      });
+    }
+
+    function renderCard() {
+      const item = filteredWords[currentIndex];
+      if (!item) {
+        categoryLabel.textContent = "没有结果";
+        scene.style.setProperty("--scene-bg", "linear-gradient(135deg, #f0f0f0, #fafafa)");
+        emojiBox.textContent = "🔍";
+        wordText.textContent = "No match";
+        phoneticText.textContent = "";
+        meaningText.textContent = "没有找到匹配的单词";
+        hintText.textContent = "试试清空搜索或切换分类。";
+        return;
+      }
+
+      categoryLabel.textContent = `${item.category} · #${item.id}`;
+      scene.style.setProperty("--scene-bg", item.scene);
+      emojiBox.textContent = item.emoji;
+      wordText.textContent = item.en;
+      phoneticText.textContent = item.phonetic;
+      meaningText.textContent = meaningVisible ? item.zh : "先自己想一想中文意思";
+      hintText.textContent = meaningVisible ? item.hint : "先听一听发音，再猜猜它的中文意思。";
+    }
+
+    function renderAll() {
+      filteredWords = getFilteredWords();
+      if (currentIndex >= filteredWords.length) currentIndex = 0;
+      renderCategoryChips();
+      renderCard();
+      renderWordList();
+      updateStats();
+    }
+
+    function maybeSpeakCurrent() {
+      if (!autoSpeak.checked) return;
+      const item = filteredWords[currentIndex];
+      if (item) speak(item.en);
+    }
+
+    function move(step) {
+      if (!filteredWords.length) return;
+      currentIndex = (currentIndex + step + filteredWords.length) % filteredWords.length;
+      renderCard();
+      renderWordList();
+      updateStats();
+      maybeSpeakCurrent();
+    }
+
+    function randomPick() {
+      if (!filteredWords.length) return;
+      currentIndex = Math.floor(Math.random() * filteredWords.length);
+      renderCard();
+      renderWordList();
+      updateStats();
+      maybeSpeakCurrent();
+    }
+
+    function makeQuiz() {
+      if (!filteredWords.length) return;
+      const item = filteredWords[Math.floor(Math.random() * filteredWords.length)];
+      quizWord.textContent = item.en;
+      quizAnswer.textContent = "";
+      quizAnswer.dataset.answer = `${item.zh} ${item.phonetic}`;
+      quizAnswer.dataset.word = item.en;
+    }
+
+    searchInput.addEventListener("input", (event) => {
+      keyword = event.target.value;
+      currentIndex = 0;
+      renderAll();
+    });
+
+    document.getElementById("prevBtn").addEventListener("click", () => move(-1));
+    document.getElementById("nextBtn").addEventListener("click", () => move(1));
+    document.getElementById("randomBtn").addEventListener("click", randomPick);
+    document.getElementById("speakBtn").addEventListener("click", () => {
+      const item = filteredWords[currentIndex];
+      if (item) speak(item.en);
+    });
+
+    document.getElementById("flipBtn").addEventListener("click", () => {
+      meaningVisible = !meaningVisible;
+      document.getElementById("flipBtn").textContent = meaningVisible ? "藏起来" : "看答案";
+      renderCard();
+    });
+
+    document.getElementById("quizBtn").addEventListener("click", makeQuiz);
+    document.getElementById("showQuizAnswerBtn").addEventListener("click", () => {
+      quizAnswer.textContent = quizAnswer.dataset.answer || "先出一道题。";
+    });
+    document.getElementById("speakQuizBtn").addEventListener("click", () => {
+      const word = quizAnswer.dataset.word || quizWord.textContent;
+      if (word && word !== "按“来一题小测验”开始") speak(word);
+    });
+
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") move(-1);
+      if (event.key === "ArrowRight") move(1);
+      if (event.key.toLowerCase() === "s") {
+        const item = filteredWords[currentIndex];
+        if (item) speak(item.en);
+      }
+    });
+
+    renderAll();
+    makeQuiz();
+    document.getElementById("flipBtn").textContent = meaningVisible ? "藏起来" : "看答案";
+    if (voicesReady) {
+      setTimeout(maybeSpeakCurrent, 500);
+    }
+  </script>
+</body>
+</html>
