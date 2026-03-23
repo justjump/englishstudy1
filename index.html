@@ -418,6 +418,21 @@
       margin-top: 0;
     }
 
+    .list-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .list-toggle {
+      background: transparent;
+      border: 0;
+      color: var(--muted);
+      font-weight: 700;
+      padding: 0;
+    }
+
     .word-list {
       display: grid;
       grid-template-columns: 1fr;
@@ -425,6 +440,11 @@
       margin-top: 12px;
       max-height: 420px;
       overflow: auto;
+    }
+
+    .list-panel.collapsed .word-list,
+    .list-panel.collapsed .footer-tip {
+      display: none;
     }
 
     .word-pill {
@@ -579,7 +599,10 @@
         </div>
 
         <div class="panel list-panel">
-          <h3>当前词表</h3>
+          <div class="list-header">
+            <h3>当前词表</h3>
+            <button class="list-toggle" id="toggleWordListBtn" type="button">收起</button>
+          </div>
           <div class="word-list" id="wordList"></div>
           <p class="footer-tip">发音使用浏览器内置 `speechSynthesis`。如果第一次没出声，先点一次“发音”，浏览器通常会初始化语音权限。</p>
         </div>
@@ -637,6 +660,8 @@
     const wordList = document.getElementById("wordList");
     const autoSpeak = document.getElementById("autoSpeak");
     const alwaysShowMeaning = document.getElementById("alwaysShowMeaning");
+    const listPanel = document.querySelector(".list-panel");
+    const toggleWordListBtn = document.getElementById("toggleWordListBtn");
     const settingsPanel = document.getElementById("settingsPanel");
     const settingsSummary = document.getElementById("settingsSummary");
     const toggleSettingsBtn = document.getElementById("toggleSettingsBtn");
@@ -663,11 +688,18 @@
     let voicesReady = false;
     let cachedVoices = [];
     let settingsOpen = false;
+    let wordListOpen = true;
 
     function setSettingsOpen(open) {
       settingsOpen = open;
       settingsPanel.classList.toggle("open", settingsOpen);
       toggleSettingsBtn.textContent = settingsOpen ? "收起设置" : "学习设置";
+    }
+
+    function setWordListOpen(open) {
+      wordListOpen = open;
+      listPanel.classList.toggle("collapsed", !wordListOpen);
+      toggleWordListBtn.textContent = wordListOpen ? "收起" : "展开";
     }
 
     function syncMeaningMode(resetIfNeeded = false) {
@@ -863,6 +895,10 @@
       setSettingsOpen(!settingsOpen);
     });
 
+    toggleWordListBtn.addEventListener("click", () => {
+      setWordListOpen(!wordListOpen);
+    });
+
     document.getElementById("prevBtn").addEventListener("click", () => move(-1));
     document.getElementById("nextBtn").addEventListener("click", () => move(1));
     document.getElementById("randomBtn").addEventListener("click", randomPick);
@@ -902,6 +938,7 @@
     makeQuiz();
     syncMeaningMode();
     setSettingsOpen(false);
+    setWordListOpen(true);
     if (voicesReady) {
       setTimeout(maybeSpeakCurrent, 500);
     }
