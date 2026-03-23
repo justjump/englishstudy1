@@ -808,8 +808,8 @@
       updateStats();
     }
 
-    function maybeSpeakCurrent() {
-      if (!autoSpeak.checked) return;
+    function maybeSpeakCurrent(force = false) {
+      if (!force && !autoSpeak.checked) return;
       const item = filteredWords[currentIndex];
       if (item) speak(item.en);
     }
@@ -821,7 +821,7 @@
       renderCard();
       renderWordList();
       updateStats();
-      maybeSpeakCurrent();
+      maybeSpeakCurrent(true);
     }
 
     function randomPick() {
@@ -831,7 +831,7 @@
       renderCard();
       renderWordList();
       updateStats();
-      maybeSpeakCurrent();
+      maybeSpeakCurrent(true);
     }
 
     function makeQuiz() {
