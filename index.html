@@ -70,9 +70,9 @@
     }
 
     .hero {
-      padding: 20px;
+      padding: 12px 14px;
       border: 3px solid rgba(30, 43, 58, 0.08);
-      border-radius: 26px;
+      border-radius: 22px;
       background: linear-gradient(135deg, rgba(255,255,255,0.86), rgba(255,248,230,0.86));
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
@@ -81,8 +81,15 @@
     .hero-top {
       display: flex;
       justify-content: space-between;
-      gap: 16px;
-      align-items: flex-start;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .hero-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       flex-wrap: wrap;
     }
 
@@ -90,39 +97,35 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 8px 14px;
+      padding: 6px 12px;
       border-radius: 999px;
       background: #fff;
       border: 2px solid rgba(30, 43, 58, 0.08);
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
       letter-spacing: 0.04em;
     }
 
     h1 {
-      margin: 10px 0 8px;
-      font-size: clamp(32px, 5vw, 52px);
+      margin: 0;
+      font-size: clamp(24px, 3.5vw, 34px);
       line-height: 1;
     }
 
     .hero p {
-      margin: 0;
-      max-width: 620px;
-      font-size: 15px;
-      line-height: 1.6;
-      color: var(--muted);
+      display: none;
     }
 
     .stats {
       display: grid;
-      grid-template-columns: repeat(3, minmax(92px, 1fr));
-      gap: 10px;
-      min-width: min(100%, 290px);
+      grid-template-columns: repeat(3, minmax(72px, 1fr));
+      gap: 8px;
+      min-width: min(100%, 228px);
     }
 
     .stat {
-      padding: 14px 10px;
-      border-radius: 18px;
+      padding: 10px 8px;
+      border-radius: 16px;
       background: #fff;
       border: 2px solid rgba(30, 43, 58, 0.08);
       text-align: center;
@@ -130,15 +133,19 @@
 
     .stat strong {
       display: block;
-      font-size: 24px;
-      margin-bottom: 4px;
+      font-size: 18px;
+      margin-bottom: 2px;
+    }
+
+    .stat span {
+      font-size: 12px;
     }
 
     .controls {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 14px;
-      margin-top: 18px;
+      gap: 0;
+      margin-top: 10px;
     }
 
     .panel {
@@ -146,6 +153,49 @@
       border-radius: 20px;
       background: var(--panel);
       border: 2px solid rgba(30, 43, 58, 0.08);
+    }
+
+    .panel.collapsible {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .panel-toggle {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      background: transparent;
+      border: 0;
+      font-weight: 800;
+      text-align: left;
+    }
+
+    .panel-toggle .toggle-meta {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .panel-toggle .toggle-icon {
+      font-size: 18px;
+      transition: transform 160ms ease;
+    }
+
+    .panel.collapsible.open .toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    .panel-body {
+      display: none;
+      padding: 0 16px 16px;
+      border-top: 2px solid rgba(30, 43, 58, 0.06);
+    }
+
+    .panel.collapsible.open .panel-body {
+      display: block;
     }
 
     .search {
@@ -434,6 +484,10 @@
         border-radius: 22px;
       }
 
+      .hero {
+        padding: 10px 12px;
+      }
+
       .meaning {
         font-size: 24px;
       }
@@ -444,10 +498,9 @@
   <main class="page">
     <section class="hero">
       <div class="hero-top">
-        <div>
+        <div class="hero-title">
           <span class="badge">识别自图片 40 个单词</span>
           <h1>小朋友背单词乐园</h1>
-          <p>先看英文，先听发音，先自己猜中文。点一下再看答案，学习会更像小游戏。</p>
         </div>
         <div class="stats">
           <div class="stat">
@@ -463,22 +516,32 @@
             <span>学习进度</span>
           </div>
         </div>
+        <button class="action" id="toggleSettingsBtn" type="button">学习设置</button>
       </div>
 
       <div class="controls">
-        <div class="panel">
-          <div class="search">
-            <input id="searchInput" type="text" placeholder="搜索英文或中文，例如 school / 衣服" />
+        <div class="panel collapsible" id="settingsPanel">
+          <button class="panel-toggle" id="settingsSummary" type="button">
+            <span>
+              学习设置
+              <span class="toggle-meta">搜索、分类、发音和显示规则</span>
+            </span>
+            <span class="toggle-icon">▾</span>
+          </button>
+          <div class="panel-body">
+            <div class="search" style="margin-top: 14px;">
+              <input id="searchInput" type="text" placeholder="搜索英文或中文，例如 school / 衣服" />
+            </div>
+            <div class="chip-row" id="categoryChips"></div>
+            <label class="switch">
+              <input id="autoSpeak" type="checkbox" checked />
+              <span>切换单词时自动朗读英文</span>
+            </label>
+            <label class="switch">
+              <input id="alwaysShowMeaning" type="checkbox" />
+              <span>默认显示中文意思</span>
+            </label>
           </div>
-          <div class="chip-row" id="categoryChips"></div>
-          <label class="switch">
-            <input id="autoSpeak" type="checkbox" checked />
-            <span>切换单词时自动朗读英文</span>
-          </label>
-          <label class="switch">
-            <input id="alwaysShowMeaning" type="checkbox" />
-            <span>默认显示中文意思</span>
-          </label>
         </div>
 
       </div>
@@ -574,6 +637,9 @@
     const wordList = document.getElementById("wordList");
     const autoSpeak = document.getElementById("autoSpeak");
     const alwaysShowMeaning = document.getElementById("alwaysShowMeaning");
+    const settingsPanel = document.getElementById("settingsPanel");
+    const settingsSummary = document.getElementById("settingsSummary");
+    const toggleSettingsBtn = document.getElementById("toggleSettingsBtn");
 
     const totalCount = document.getElementById("totalCount");
     const shownCount = document.getElementById("shownCount");
@@ -596,6 +662,13 @@
     let meaningVisible = false;
     let voicesReady = false;
     let cachedVoices = [];
+    let settingsOpen = false;
+
+    function setSettingsOpen(open) {
+      settingsOpen = open;
+      settingsPanel.classList.toggle("open", settingsOpen);
+      toggleSettingsBtn.textContent = settingsOpen ? "收起设置" : "学习设置";
+    }
 
     function syncMeaningMode(resetIfNeeded = false) {
       if (alwaysShowMeaning.checked) {
@@ -782,6 +855,14 @@
       renderCard();
     });
 
+    settingsSummary.addEventListener("click", () => {
+      setSettingsOpen(!settingsOpen);
+    });
+
+    toggleSettingsBtn.addEventListener("click", () => {
+      setSettingsOpen(!settingsOpen);
+    });
+
     document.getElementById("prevBtn").addEventListener("click", () => move(-1));
     document.getElementById("nextBtn").addEventListener("click", () => move(1));
     document.getElementById("randomBtn").addEventListener("click", randomPick);
@@ -820,6 +901,7 @@
     renderAll();
     makeQuiz();
     syncMeaningMode();
+    setSettingsOpen(false);
     if (voicesReady) {
       setTimeout(maybeSpeakCurrent, 500);
     }
