@@ -475,6 +475,10 @@
             <input id="autoSpeak" type="checkbox" checked />
             <span>切换单词时自动朗读英文</span>
           </label>
+          <label class="switch">
+            <input id="alwaysShowMeaning" type="checkbox" />
+            <span>默认显示中文意思</span>
+          </label>
         </div>
 
       </div>
@@ -569,6 +573,7 @@
     const categoryChips = document.getElementById("categoryChips");
     const wordList = document.getElementById("wordList");
     const autoSpeak = document.getElementById("autoSpeak");
+    const alwaysShowMeaning = document.getElementById("alwaysShowMeaning");
 
     const totalCount = document.getElementById("totalCount");
     const shownCount = document.getElementById("shownCount");
@@ -591,6 +596,15 @@
     let meaningVisible = false;
     let voicesReady = false;
     let cachedVoices = [];
+
+    function syncMeaningMode(resetIfNeeded = false) {
+      if (alwaysShowMeaning.checked) {
+        meaningVisible = true;
+      } else if (resetIfNeeded) {
+        meaningVisible = false;
+      }
+      document.getElementById("flipBtn").textContent = meaningVisible ? "藏起来" : "看答案";
+    }
 
     function setupVoices() {
       cachedVoices = window.speechSynthesis ? speechSynthesis.getVoices() : [];
@@ -656,6 +670,7 @@
           selectedCategory = category;
           filteredWords = getFilteredWords();
           currentIndex = 0;
+          syncMeaningMode(true);
           renderAll();
         });
         categoryChips.appendChild(chip);
@@ -678,6 +693,7 @@
         button.innerHTML = `<strong>${item.en}</strong><span>${item.zh}</span>`;
         button.addEventListener("click", () => {
           currentIndex = index;
+          syncMeaningMode(true);
           renderCard();
           renderWordList();
           updateStats();
@@ -712,6 +728,7 @@
     function renderAll() {
       filteredWords = getFilteredWords();
       if (currentIndex >= filteredWords.length) currentIndex = 0;
+      syncMeaningMode();
       renderCategoryChips();
       renderCard();
       renderWordList();
@@ -727,6 +744,7 @@
     function move(step) {
       if (!filteredWords.length) return;
       currentIndex = (currentIndex + step + filteredWords.length) % filteredWords.length;
+      syncMeaningMode(true);
       renderCard();
       renderWordList();
       updateStats();
@@ -736,6 +754,7 @@
     function randomPick() {
       if (!filteredWords.length) return;
       currentIndex = Math.floor(Math.random() * filteredWords.length);
+      syncMeaningMode(true);
       renderCard();
       renderWordList();
       updateStats();
@@ -754,7 +773,13 @@
     searchInput.addEventListener("input", (event) => {
       keyword = event.target.value;
       currentIndex = 0;
+      syncMeaningMode(true);
       renderAll();
+    });
+
+    alwaysShowMeaning.addEventListener("change", () => {
+      syncMeaningMode();
+      renderCard();
     });
 
     document.getElementById("prevBtn").addEventListener("click", () => move(-1));
@@ -767,7 +792,10 @@
 
     document.getElementById("flipBtn").addEventListener("click", () => {
       meaningVisible = !meaningVisible;
-      document.getElementById("flipBtn").textContent = meaningVisible ? "藏起来" : "看答案";
+      if (alwaysShowMeaning.checked) {
+        meaningVisible = true;
+      }
+      syncMeaningMode();
       renderCard();
     });
 
@@ -791,7 +819,7 @@
 
     renderAll();
     makeQuiz();
-    document.getElementById("flipBtn").textContent = meaningVisible ? "藏起来" : "看答案";
+    syncMeaningMode();
     if (voicesReady) {
       setTimeout(maybeSpeakCurrent, 500);
     }
