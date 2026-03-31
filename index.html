@@ -26,6 +26,7 @@
     body {
       margin: 0;
       min-height: 100vh;
+      padding-bottom: 92px;
       font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
       color: var(--ink);
       background:
@@ -513,6 +514,44 @@
       line-height: 1.7;
     }
 
+    .site-nav {
+      position: fixed;
+      left: 50%;
+      bottom: 14px;
+      transform: translateX(-50%);
+      z-index: 30;
+      width: min(960px, calc(100% - 18px));
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      padding: 10px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.94);
+      border: 2px solid rgba(30, 43, 58, 0.08);
+      box-shadow: 0 18px 40px rgba(30, 43, 58, 0.12);
+      backdrop-filter: blur(12px);
+    }
+
+    .site-nav a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 800;
+      text-align: center;
+      background: linear-gradient(180deg, #ffffff, #f8fbff);
+      border: 2px solid rgba(30, 43, 58, 0.06);
+    }
+
+    .site-nav a.active {
+      color: var(--ink);
+      background: linear-gradient(180deg, #ffe590, #ffd45b);
+    }
+
     @media (max-width: 900px) {
       .stage {
         grid-template-columns: 1fr;
@@ -668,7 +707,12 @@
         </div>
       </aside>
     </section>
-  </main>
+</main>
+  <nav class="site-nav" aria-label="站点导航">
+    <a class="active" href="./index.html">旧单词页</a>
+    <a href="./unit2-time-routines.html">句子练习页</a>
+    <a href="./unit2-sentence-vocab.html">新词记忆页</a>
+  </nav>
 
   <script>
     const words = [
