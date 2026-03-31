@@ -411,6 +411,36 @@
       margin: 18px 0 12px;
     }
 
+    .meta-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 16px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.92);
+      border: 2px solid rgba(30, 43, 58, 0.08);
+      color: #4b6478;
+      font-size: 14px;
+      font-weight: 800;
+      box-shadow: 0 8px 18px rgba(30, 43, 58, 0.08);
+    }
+
+    .meta-toggle::before {
+      content: "☰";
+      font-size: 15px;
+      line-height: 1;
+    }
+
+    .meta-panel {
+      display: none;
+      margin-top: 12px;
+    }
+
+    .meta-panel.open {
+      display: block;
+    }
+
     .status-pill,
     .pill-badge {
       display: inline-flex;
@@ -795,14 +825,17 @@
         <div class="phonetic" id="phoneticText">/ˈbrekfəst/</div>
         <p class="meaning" id="meaningText">早餐</p>
         <div class="mini-note" id="hintText">这页的词来自句子内容，适合先记关键词，再回去练整句。</div>
-        <div class="card-tools">
-          <button class="action secondary" id="mistakeBtn" type="button">标记为易错词</button>
-          <span class="status-pill" id="mistakeStatus">未标记易错</span>
-        </div>
-        <div class="note-panel">
-          <label for="wordNoteInput">这个单词的小备注</label>
-          <textarea class="note-input" id="wordNoteInput" placeholder="可以记：容易混淆的词、自己的例句、记忆方法……"></textarea>
-          <div class="note-meta" id="wordNoteMeta">自动保存到本机浏览器。</div>
+        <button class="meta-toggle" id="cardMetaToggleBtn" type="button">标注与备注</button>
+        <div class="meta-panel" id="cardMetaPanel">
+          <div class="card-tools">
+            <button class="action secondary" id="mistakeBtn" type="button">标记为易错词</button>
+            <span class="status-pill" id="mistakeStatus">未标记易错</span>
+          </div>
+          <div class="note-panel">
+            <label for="wordNoteInput">这个单词的小备注</label>
+            <textarea class="note-input" id="wordNoteInput" placeholder="可以记：容易混淆的词、自己的例句、记忆方法……"></textarea>
+            <div class="note-meta" id="wordNoteMeta">自动保存到本机浏览器。</div>
+          </div>
         </div>
         <div class="button-row" style="margin-top: 20px;">
           <button class="action" id="prevBtn">上一个</button>
@@ -828,14 +861,17 @@
             <button class="action" id="speakQuizBtn">朗读题目</button>
           </div>
           <p class="quiz-answer" id="quizAnswer"></p>
-          <div class="card-tools quiz-tools">
-            <button class="action secondary" id="quizMistakeBtn" type="button">标记为易错词</button>
-            <span class="status-pill" id="quizMistakeStatus">未标记易错</span>
-          </div>
-          <div class="quiz-note-panel">
-            <label for="quizWordNoteInput">这道题的备注</label>
-            <textarea class="quiz-note-input" id="quizWordNoteInput" placeholder="给当前测验单词记一点提示……"></textarea>
-            <div class="note-meta" id="quizWordNoteMeta">自动保存到本机浏览器。</div>
+          <button class="meta-toggle" id="quizMetaToggleBtn" type="button">标注与备注</button>
+          <div class="meta-panel" id="quizMetaPanel">
+            <div class="card-tools quiz-tools">
+              <button class="action secondary" id="quizMistakeBtn" type="button">标记为易错词</button>
+              <span class="status-pill" id="quizMistakeStatus">未标记易错</span>
+            </div>
+            <div class="quiz-note-panel">
+              <label for="quizWordNoteInput">这道题的备注</label>
+              <textarea class="quiz-note-input" id="quizWordNoteInput" placeholder="给当前测验单词记一点提示……"></textarea>
+              <div class="note-meta" id="quizWordNoteMeta">自动保存到本机浏览器。</div>
+            </div>
           </div>
           <label class="switch">
             <input id="autoSpeakQuiz" type="checkbox" checked />
@@ -937,6 +973,8 @@
     const phoneticText = document.getElementById("phoneticText");
     const meaningText = document.getElementById("meaningText");
     const hintText = document.getElementById("hintText");
+    const cardMetaToggleBtn = document.getElementById("cardMetaToggleBtn");
+    const cardMetaPanel = document.getElementById("cardMetaPanel");
     const mistakeBtn = document.getElementById("mistakeBtn");
     const mistakeStatus = document.getElementById("mistakeStatus");
     const wordNoteInput = document.getElementById("wordNoteInput");
@@ -946,6 +984,8 @@
     const quizAnswer = document.getElementById("quizAnswer");
     const quizModeChips = document.getElementById("quizModeChips");
     const quizModeHint = document.getElementById("quizModeHint");
+    const quizMetaToggleBtn = document.getElementById("quizMetaToggleBtn");
+    const quizMetaPanel = document.getElementById("quizMetaPanel");
     const quizMistakeBtn = document.getElementById("quizMistakeBtn");
     const quizMistakeStatus = document.getElementById("quizMistakeStatus");
     const quizWordNoteInput = document.getElementById("quizWordNoteInput");
@@ -961,6 +1001,8 @@
     let settingsOpen = false;
     let wordListOpen = true;
     let soloSection = null;
+    let cardMetaOpen = false;
+    let quizMetaOpen = false;
     let quizMode = "all";
     let noteSaveTimer = null;
     let quizNoteSaveTimer = null;
@@ -1110,6 +1152,18 @@
       wordListOpen = open;
       listPanel.classList.toggle("collapsed", !wordListOpen);
       toggleWordListBtn.textContent = wordListOpen ? "收起" : "展开";
+    }
+
+    function setCardMetaOpen(open) {
+      cardMetaOpen = open;
+      cardMetaPanel.classList.toggle("open", cardMetaOpen);
+      cardMetaToggleBtn.textContent = cardMetaOpen ? "收起标注与备注" : "标注与备注";
+    }
+
+    function setQuizMetaOpen(open) {
+      quizMetaOpen = open;
+      quizMetaPanel.classList.toggle("open", quizMetaOpen);
+      quizMetaToggleBtn.textContent = quizMetaOpen ? "收起标注与备注" : "标注与备注";
     }
 
     function updateSoloButtons() {
@@ -1439,6 +1493,12 @@
     toggleWordListBtn.addEventListener("click", () => {
       setWordListOpen(!wordListOpen);
     });
+    cardMetaToggleBtn.addEventListener("click", () => {
+      setCardMetaOpen(!cardMetaOpen);
+    });
+    quizMetaToggleBtn.addEventListener("click", () => {
+      setQuizMetaOpen(!quizMetaOpen);
+    });
 
     document.getElementById("prevBtn").addEventListener("click", () => move(-1));
     document.getElementById("nextBtn").addEventListener("click", () => move(1));
@@ -1486,6 +1546,8 @@
     syncMeaningMode();
     setSettingsOpen(false);
     setWordListOpen(true);
+    setCardMetaOpen(false);
+    setQuizMetaOpen(false);
     updateSoloButtons();
     if (voicesReady) {
       setTimeout(maybeSpeakCurrent, 500);
