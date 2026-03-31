@@ -3,21 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Unit 2 时间与课程练习站</title>
+  <title>Unit 2 句子练习册</title>
   <style>
     :root {
-      --bg: #f6fbff;
-      --panel: rgba(255, 255, 255, 0.9);
-      --ink: #203045;
-      --muted: #5e7188;
-      --green: #86cd58;
-      --green-deep: #57933a;
-      --blue: #7fbae9;
-      --blue-deep: #4f82b7;
-      --yellow: #ffd977;
-      --cream: #fff9ea;
-      --line: rgba(32, 48, 69, 0.12);
-      --shadow: 0 26px 60px rgba(79, 130, 183, 0.14);
+      --bg: #f7f8fb;
+      --paper: #ffffff;
+      --ink: #1f2f42;
+      --muted: #617286;
+      --green: #79b84f;
+      --green-soft: #edf8df;
+      --blue: #77b3e3;
+      --blue-soft: #eef7ff;
+      --yellow: #ffe082;
+      --line: rgba(31, 47, 66, 0.1);
+      --shadow: 0 18px 40px rgba(31, 47, 66, 0.08);
     }
 
     * {
@@ -27,342 +26,269 @@
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
       color: var(--ink);
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(127, 186, 233, 0.3), transparent 28%),
-        radial-gradient(circle at right 20%, rgba(134, 205, 88, 0.2), transparent 24%),
-        linear-gradient(180deg, #f5fbff 0%, #fefdf7 100%);
+        linear-gradient(180deg, #f4f9ff 0%, #fbfcfe 42%, #fefcf6 100%);
     }
 
     .page {
-      width: min(1180px, calc(100% - 24px));
-      margin: 16px auto 32px;
+      width: min(1160px, calc(100% - 24px));
+      margin: 18px auto 30px;
     }
 
-    .hero {
-      padding: 20px;
-      border-radius: 28px;
-      background: linear-gradient(140deg, rgba(255,255,255,0.95), rgba(241, 250, 255, 0.92));
-      border: 2px solid rgba(32, 48, 69, 0.08);
+    .hero,
+    .panel {
+      background: var(--paper);
+      border: 2px solid var(--line);
+      border-radius: 26px;
       box-shadow: var(--shadow);
     }
 
-    .hero-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
-      align-items: center;
+    .hero {
+      padding: 20px 22px;
     }
 
-    .tags,
-    .hero-actions,
-    .quick-links,
-    .chip-row,
+    .hero-top,
+    .nav-row,
     .button-row,
-    .builder-bank {
+    .chip-row,
+    .sentence-actions {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
       align-items: center;
     }
 
-    .tag,
+    .hero-top {
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .badge,
     .chip,
-    .action,
-    .link-btn,
-    .word-token {
+    .nav-link,
+    .action {
       border-radius: 999px;
-      border: 0;
-      font: inherit;
-      cursor: pointer;
-      transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
-    }
-
-    .tag,
-    .chip,
-    .link-btn {
-      padding: 8px 14px;
+      border: 2px solid var(--line);
       background: #fff;
-      border: 2px solid rgba(32, 48, 69, 0.08);
-      color: var(--muted);
-      font-weight: 700;
+      color: var(--ink);
+      font: inherit;
+      font-weight: 800;
+      text-decoration: none;
     }
 
-    .tag.active,
+    .badge,
+    .chip,
+    .nav-link {
+      padding: 7px 14px;
+      color: var(--muted);
+    }
+
+    .badge.active,
     .chip.active {
       background: var(--yellow);
       color: var(--ink);
     }
 
-    .action,
-    .word-token {
-      padding: 11px 16px;
-      background: linear-gradient(180deg, #ffffff, #edf7ff);
-      border: 2px solid rgba(32, 48, 69, 0.08);
-      color: var(--ink);
-      font-weight: 800;
-      box-shadow: 0 10px 20px rgba(79, 130, 183, 0.1);
+    .action {
+      padding: 10px 16px;
+      cursor: pointer;
+      box-shadow: 0 8px 16px rgba(31, 47, 66, 0.06);
     }
 
     .action.primary {
-      background: linear-gradient(180deg, #88cf58, #6cad4a);
-      color: white;
+      background: var(--green);
+      color: #fff;
+      border-color: rgba(121, 184, 79, 0.2);
     }
 
     .action.secondary {
-      background: linear-gradient(180deg, #8ac5f2, #6eaee0);
-      color: white;
-    }
-
-    .action:hover,
-    .chip:hover,
-    .link-btn:hover,
-    .word-token:hover {
-      transform: translateY(-2px);
+      background: var(--blue);
+      color: #fff;
+      border-color: rgba(119, 179, 227, 0.2);
     }
 
     h1 {
       margin: 10px 0 8px;
-      font-size: clamp(30px, 5vw, 56px);
-      line-height: 1.02;
+      font-size: clamp(30px, 4.5vw, 48px);
+      line-height: 1.08;
     }
 
     .hero p {
       margin: 0;
       max-width: 760px;
       color: var(--muted);
-      line-height: 1.7;
+      line-height: 1.8;
       font-size: 16px;
     }
 
-    .quick-links {
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
+      gap: 16px;
       margin-top: 16px;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.18fr) minmax(360px, 0.82fr);
-      gap: 16px;
-      margin-top: 18px;
-    }
-
     .panel {
-      background: var(--panel);
-      border: 2px solid rgba(32, 48, 69, 0.08);
-      border-radius: 28px;
-      box-shadow: var(--shadow);
-      overflow: hidden;
+      padding: 18px;
     }
 
-    .panel-inner {
-      padding: 20px;
-    }
-
-    .section-title {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-
-    .section-title h2,
-    .section-title h3 {
+    .panel h2,
+    .panel h3 {
       margin: 0;
       font-size: 24px;
     }
 
-    .clock-stage {
-      display: grid;
-      grid-template-columns: minmax(340px, 1fr) minmax(280px, 320px);
-      gap: 18px;
-      align-items: stretch;
-    }
-
-    .clock-face {
-      position: relative;
-      min-height: 560px;
-      border-radius: 28px;
-      background:
-        radial-gradient(circle at center, rgba(255,255,255,0.96) 0 24%, rgba(221, 244, 203, 0.88) 24% 55%, rgba(115, 177, 63, 0.95) 55% 61%, rgba(201, 233, 174, 0.78) 61% 100%);
-      border: 6px solid rgba(92, 146, 50, 0.16);
-      box-shadow: inset 0 8px 30px rgba(255,255,255,0.5);
-      overflow: hidden;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      grid-template-rows: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      padding: 22px;
-      align-items: stretch;
-    }
-
-    .clock-dial {
-      position: absolute;
-      inset: 50% auto auto 50%;
-      width: 220px;
-      height: 220px;
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      background: radial-gradient(circle at center, rgba(255,255,255,0.98), rgba(255,255,255,0.9));
-      box-shadow:
-        inset 0 10px 24px rgba(255,255,255,0.75),
-        0 10px 30px rgba(32, 48, 69, 0.08);
-      border: 2px solid rgba(255,255,255,0.8);
-      z-index: 3;
-    }
-
-    .clock-center {
-      position: absolute;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: var(--green-deep);
-      left: calc(50% - 14px);
-      top: calc(50% - 14px);
-      z-index: 5;
-      box-shadow: 0 0 0 8px rgba(255,255,255,0.4);
-    }
-
-    .hand {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform-origin: left center;
-      border-radius: 999px;
-      z-index: 4;
-    }
-
-    .hand.hour {
-      width: 96px;
-      height: 10px;
-      background: linear-gradient(90deg, #7dbb4f, #4f8a33);
-    }
-
-    .hand.minute {
-      width: 138px;
-      height: 8px;
-      background: linear-gradient(90deg, #6eaee0, #3f7caf);
-    }
-
-    .activity-bubble {
-      position: relative;
-      width: 100%;
-      min-height: 110px;
-      padding: 12px;
-      border-radius: 22px;
-      background: rgba(255,255,255,0.88);
-      border: 2px solid rgba(32, 48, 69, 0.08);
-      box-shadow: 0 10px 24px rgba(32, 48, 69, 0.12);
+    .panel-head {
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      text-align: center;
-      gap: 6px;
-      z-index: 2;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 16px;
     }
 
-    .activity-bubble.active {
-      background: linear-gradient(180deg, #fffde8, #f5ffd8);
-      border-color: rgba(92, 146, 50, 0.35);
-      transform: scale(1.03);
-    }
-
-    .activity-bubble .emoji {
-      font-size: 38px;
-    }
-
-    .activity-bubble strong {
-      font-size: 18px;
-      line-height: 1.15;
-    }
-
-    .slot-top-left { grid-column: 1; grid-row: 1; align-self: start; }
-    .slot-top-right { grid-column: 3; grid-row: 1; align-self: start; }
-    .slot-middle-left { grid-column: 1; grid-row: 2; align-self: center; }
-    .slot-middle-right { grid-column: 3; grid-row: 2; align-self: center; }
-    .slot-bottom-left { grid-column: 1; grid-row: 3; align-self: end; }
-    .slot-bottom-right { grid-column: 3; grid-row: 3; align-self: end; }
-
-    .speech {
-      margin-top: 18px;
+    .lesson-sheet {
       display: grid;
-      grid-template-columns: 1fr 1fr;
       gap: 14px;
     }
 
-    .speech-box {
-      padding: 16px 18px;
-      border-radius: 22px;
-      background: #fff;
-      border: 2px solid rgba(32, 48, 69, 0.08);
-      color: var(--muted);
-      line-height: 1.7;
-      font-size: 17px;
-    }
-
-    .speech-box strong {
-      color: var(--ink);
-    }
-
-    .lesson-card {
-      display: grid;
-      gap: 12px;
-    }
-
-    .focus-card {
+    .sentence-focus {
       padding: 18px;
       border-radius: 24px;
-      background: linear-gradient(180deg, #fffdf4, #f0fbff);
-      border: 2px solid rgba(32, 48, 69, 0.08);
+      border: 2px solid var(--line);
+      background: linear-gradient(180deg, #ffffff, #f7fbff);
     }
 
-    .focus-card h3 {
-      margin: 0 0 8px;
-      font-size: 18px;
-    }
-
-    .word-main {
-      font-size: clamp(34px, 4.6vw, 56px);
-      margin: 10px 0 6px;
+    .focus-time {
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--green-soft);
+      color: var(--green);
       font-weight: 900;
-      letter-spacing: 0.01em;
-      line-height: 1.02;
-      overflow-wrap: anywhere;
+      margin-bottom: 10px;
     }
 
-    .cn-main {
-      font-size: 22px;
-      min-height: 36px;
+    .focus-sentence {
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.2;
+      font-weight: 900;
+      margin: 0 0 8px;
+    }
+
+    .focus-translation {
+      min-height: 34px;
+      font-size: 21px;
+      color: var(--muted);
       margin-bottom: 12px;
     }
 
-    .tiny {
-      font-size: 14px;
+    .focus-note {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: #fffdf2;
+      border: 2px dashed rgba(31, 47, 66, 0.12);
       color: var(--muted);
       line-height: 1.7;
+      font-size: 14px;
     }
 
-    .mini-grid {
+    .schedule-table {
       display: grid;
-      gap: 14px;
+      gap: 10px;
+    }
+
+    .schedule-row {
+      display: grid;
+      grid-template-columns: 92px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 12px 14px;
+      border-radius: 18px;
+      border: 2px solid var(--line);
+      background: linear-gradient(180deg, #fff, #f9fbff);
+      cursor: pointer;
+    }
+
+    .schedule-row.active {
+      background: linear-gradient(180deg, #fff9de, #eff9db);
+      border-color: rgba(121, 184, 79, 0.28);
+    }
+
+    .schedule-time {
+      font-weight: 900;
+      color: var(--blue);
+    }
+
+    .schedule-main strong {
+      display: block;
+      font-size: 19px;
+      margin-bottom: 4px;
+    }
+
+    .schedule-main span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .dialogue-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .dialogue-card {
+      padding: 16px;
+      border-radius: 20px;
+      border: 2px solid var(--line);
+      background: linear-gradient(180deg, #ffffff, #f8fbff);
+    }
+
+    .dialogue-card h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .line {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: #fff;
+      border: 2px solid rgba(31, 47, 66, 0.06);
+      line-height: 1.7;
+      margin-top: 8px;
+    }
+
+    .exercise-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
       margin-top: 16px;
     }
 
-    .quiz-card,
-    .builder-card,
-    .phonics-card {
+    .exercise-card {
       padding: 18px;
-      border-radius: 24px;
-      background: #fff;
-      border: 2px solid rgba(32, 48, 69, 0.08);
+      border-radius: 22px;
+      border: 2px solid var(--line);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .exercise-card h3 {
+      margin: 0 0 8px;
+      font-size: 22px;
+    }
+
+    .tiny {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 14px;
     }
 
     .question {
       font-size: 26px;
+      line-height: 1.3;
       font-weight: 900;
-      margin: 8px 0 14px;
+      margin: 12px 0;
     }
 
     .option-list {
@@ -375,126 +301,85 @@
       text-align: left;
       padding: 14px 16px;
       border-radius: 18px;
-      border: 2px solid rgba(32, 48, 69, 0.08);
-      background: linear-gradient(180deg, #ffffff, #f6fbff);
-      font: inherit;
+      border: 2px solid var(--line);
+      background: linear-gradient(180deg, #fff, #f8fbff);
       color: var(--ink);
+      font: inherit;
       font-weight: 800;
       cursor: pointer;
     }
 
     .option.correct {
-      background: linear-gradient(180deg, #f1ffd5, #e3f8bf);
-      border-color: rgba(92, 146, 50, 0.35);
+      background: linear-gradient(180deg, #f2ffd8, #e5f8c2);
+      border-color: rgba(121, 184, 79, 0.35);
     }
 
     .option.wrong {
-      background: linear-gradient(180deg, #fff0f0, #ffdede);
-      border-color: rgba(209, 98, 98, 0.28);
+      background: linear-gradient(180deg, #fff0f0, #ffdfe0);
+      border-color: rgba(204, 96, 96, 0.24);
     }
 
     .feedback {
-      min-height: 26px;
+      min-height: 24px;
       margin-top: 10px;
       color: var(--muted);
       font-weight: 700;
     }
 
-    .builder-bank,
-    .builder-target {
+    .builder-zone,
+    .token-bank {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
       min-height: 64px;
       padding: 12px;
-      border-radius: 18px;
-      background: #f7fbff;
-      border: 2px dashed rgba(32, 48, 69, 0.12);
       margin-top: 12px;
+      border-radius: 16px;
+      border: 2px dashed rgba(31, 47, 66, 0.12);
+      background: #fafcff;
     }
 
-    .builder-target {
-      background: #fffef3;
+    .builder-zone {
+      background: #fffdf4;
     }
 
-    .builder-result {
-      margin-top: 10px;
-      font-weight: 700;
-      color: var(--muted);
-      min-height: 24px;
-    }
-
-    .timeline {
-      display: grid;
-      gap: 10px;
-    }
-
-    .timeline-item {
-      display: grid;
-      grid-template-columns: 84px 1fr auto;
-      gap: 12px;
-      align-items: center;
-      padding: 12px 14px;
-      border-radius: 18px;
-      background: linear-gradient(180deg, #ffffff, #f5fbff);
-      border: 2px solid rgba(32, 48, 69, 0.08);
-    }
-
-    .timeline-item.active {
-      background: linear-gradient(180deg, #fff9dd, #efffd8);
-    }
-
-    .time {
-      font-weight: 900;
-      color: var(--blue-deep);
+    .token {
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 2px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
     }
 
     .footer-note {
-      margin-top: 16px;
+      margin-top: 10px;
       color: var(--muted);
-      font-size: 14px;
       line-height: 1.7;
+      font-size: 14px;
     }
 
-    @media (max-width: 1080px) {
-      .grid,
-      .clock-stage,
-      .speech {
+    @media (max-width: 980px) {
+      .layout,
+      .exercise-grid {
         grid-template-columns: 1fr;
-      }
-
-      .clock-face {
-        min-height: 620px;
       }
     }
 
     @media (max-width: 640px) {
       .page {
-        width: min(100% - 14px, 1180px);
+        width: min(100% - 14px, 1160px);
       }
 
       .hero,
-      .panel-inner {
+      .panel,
+      .exercise-card {
         padding: 16px;
       }
 
-      .clock-face {
-        min-height: 760px;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: repeat(4, minmax(0, 1fr));
-      }
-
-      .clock-dial {
-        width: 190px;
-        height: 190px;
-        top: 50%;
-      }
-
-      .slot-top-left { grid-column: 1; grid-row: 1; }
-      .slot-top-right { grid-column: 2; grid-row: 1; }
-      .slot-middle-left { grid-column: 1; grid-row: 2; }
-      .slot-middle-right { grid-column: 2; grid-row: 2; }
-      .slot-bottom-left { grid-column: 1; grid-row: 4; }
-      .slot-bottom-right { grid-column: 2; grid-row: 4; }
-
-      .timeline-item {
+      .schedule-row {
         grid-template-columns: 1fr;
       }
     }
@@ -505,334 +390,330 @@
     <section class="hero">
       <div class="hero-top">
         <div>
-          <div class="tags">
-            <span class="tag active">Unit 2</span>
-            <span class="tag">时间与课程</span>
-            <span class="tag">作息与拼读</span>
+          <div class="nav-row">
+            <span class="badge active">Unit 2</span>
+            <span class="chip">句子练习</span>
+            <span class="chip">时间表达</span>
           </div>
-          <h1>时间与课程练习站</h1>
-          <p>这一页专门承接课本截图里的新内容：`breakfast / lunch / dinner / maths class / art class / English class / get up / go to school / go home / go to bed`，并额外加入时间匹配、句子拼装、or 拼读和日程检测。</p>
+          <h1>时间与课程句子练习册</h1>
+          <p>这一页专门练句子，不再用钟面展示。核心内容是：看时间说句子、看作息说动作、补全课本句型、练 `or` 拼读，整体更像教材配套练习册。</p>
         </div>
-        <div class="hero-actions">
-          <a class="link-btn" href="./index.html">返回原单词页</a>
+        <div class="sentence-actions">
+          <a class="nav-link" href="./index.html">旧单词页</a>
+          <a class="nav-link" href="./unit2-sentence-vocab.html">新词记忆页</a>
           <button class="action secondary" id="speakCurrentBtn" type="button">朗读当前句子</button>
         </div>
       </div>
-      <div class="quick-links">
-        <button class="chip active" data-tab="time">时间卡片</button>
-        <button class="chip" data-tab="schedule">作息顺序</button>
-        <button class="chip" data-tab="builder">句子拼装</button>
-        <button class="chip" data-tab="phonics">or 拼读</button>
+    </section>
+
+    <section class="layout">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>核心句型</h2>
+          <div class="button-row">
+            <button class="action" id="prevBtn" type="button">上一个</button>
+            <button class="action primary" id="nextBtn" type="button">下一个</button>
+            <button class="action" id="toggleMeaningBtn" type="button">看中文</button>
+          </div>
+        </div>
+
+        <div class="lesson-sheet">
+          <div class="sentence-focus">
+            <div class="focus-time" id="focusTime">7:20</div>
+            <p class="focus-sentence" id="focusSentence">It's time for breakfast.</p>
+            <div class="focus-translation" id="focusTranslation">先自己想一想中文意思</div>
+            <div class="button-row" style="margin-bottom:12px;">
+              <button class="action secondary" id="speakSentenceBtn" type="button">读句子</button>
+              <button class="action" id="speakWordBtn" type="button">读关键词</button>
+            </div>
+            <div class="focus-note" id="focusNote">先看时间，再说句子。这个页面重点练完整表达，而不是只背一个单词。</div>
+          </div>
+
+          <div>
+            <div class="panel-head" style="margin-bottom:12px;">
+              <h3>一天的作息</h3>
+            </div>
+            <div class="schedule-table" id="scheduleTable"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>课本对话</h2>
+          <button class="action" id="nextDialogueBtn" type="button">换一组</button>
+        </div>
+        <div class="dialogue-list" id="dialogueList"></div>
+        <div class="footer-note">这里用课本里的真实表达来做跟读和复述，重点句型包括 `It's time to ...`、`It's time for ...`、`You're late for class.`、`Have a nice day!`。</div>
       </div>
     </section>
 
-    <section class="grid">
-      <div class="panel">
-        <div class="panel-inner">
-          <div class="section-title">
-            <h2>学习主舞台</h2>
-            <div class="button-row">
-              <button class="action" id="prevBtn" type="button">上一个</button>
-              <button class="action primary" id="nextBtn" type="button">下一个</button>
-              <button class="action" id="revealBtn" type="button">看中文</button>
-            </div>
-          </div>
-
-          <div class="clock-stage">
-            <div class="clock-face" id="clockFace">
-              <div class="clock-dial">
-                <div class="clock-center"></div>
-                <div class="hand hour" id="hourHand"></div>
-                <div class="hand minute" id="minuteHand"></div>
-              </div>
-            </div>
-
-            <div class="lesson-card">
-              <div class="focus-card">
-                <h3>当前卡片</h3>
-                <div class="word-main" id="wordMain">breakfast</div>
-                <div class="cn-main" id="cnMain">先自己回想中文</div>
-                <div class="tiny" id="sentenceMain">It's time for breakfast. Let's drink some milk.</div>
-                <div class="button-row" style="margin-top: 14px;">
-                  <button class="action secondary" id="speakWordBtn" type="button">读单词</button>
-                  <button class="action" id="speakSentenceBtn" type="button">读句子</button>
-                </div>
-              </div>
-
-              <div class="focus-card">
-                <h3>作息顺序</h3>
-                <div class="timeline" id="timeline"></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="speech">
-            <div class="speech-box">
-              <strong>课堂句型</strong><br />
-              What time is it?<br />
-              It’s 7:20. It’s time for breakfast.
-            </div>
-            <div class="speech-box">
-              <strong>行动句型</strong><br />
-              It’s time for English class.<br />
-              Let’s read and write.
-            </div>
-          </div>
+    <section class="exercise-grid">
+      <article class="exercise-card">
+        <div class="panel-head">
+          <h3>时间匹配</h3>
+          <button class="action" id="newQuizBtn" type="button">换一题</button>
         </div>
-      </div>
+        <div class="tiny">看时间，选最合适的活动或课程。</div>
+        <div class="question" id="quizQuestion">It's 6:00. What is it time for?</div>
+        <div class="option-list" id="quizOptions"></div>
+        <div class="feedback" id="quizFeedback"></div>
+      </article>
 
-      <div class="mini-grid">
-        <div class="quiz-card">
-          <div class="section-title">
-            <h3>时间匹配</h3>
-            <button class="action" id="newQuizBtn" type="button">换一题</button>
-          </div>
-          <div class="tiny">看时间，选出最合适的活动。</div>
-          <div class="question" id="quizQuestion">It’s 7:20. What time is it for?</div>
-          <div class="option-list" id="quizOptions"></div>
-          <div class="feedback" id="quizFeedback"></div>
+      <article class="exercise-card">
+        <div class="panel-head">
+          <h3>句子拼装</h3>
+          <button class="action" id="newBuilderBtn" type="button">换句子</button>
         </div>
+        <div class="tiny">把词块按正确顺序拼成课本句子。</div>
+        <div class="builder-zone" id="builderZone"></div>
+        <div class="token-bank" id="tokenBank"></div>
+        <div class="button-row" style="margin-top:12px;">
+          <button class="action primary" id="checkBuilderBtn" type="button">检查</button>
+          <button class="action" id="resetBuilderBtn" type="button">重来</button>
+        </div>
+        <div class="feedback" id="builderFeedback"></div>
+      </article>
 
-        <div class="builder-card">
-          <div class="section-title">
-            <h3>句子拼装</h3>
-            <button class="action" id="newBuilderBtn" type="button">换句子</button>
-          </div>
-          <div class="tiny">点击下方词块，把句子拼完整。</div>
-          <div class="builder-target" id="builderTarget"></div>
-          <div class="builder-bank" id="builderBank"></div>
-          <div class="builder-result" id="builderResult"></div>
-          <div class="button-row" style="margin-top: 10px;">
-            <button class="action" id="checkBuilderBtn" type="button">检查</button>
-            <button class="action" id="resetBuilderBtn" type="button">重来</button>
-          </div>
+      <article class="exercise-card">
+        <div class="panel-head">
+          <h3>or 拼读</h3>
+          <button class="action" id="newPhonicsBtn" type="button">换一题</button>
         </div>
-
-        <div class="phonics-card">
-          <div class="section-title">
-            <h3>or 拼读</h3>
-            <button class="action" id="newPhonicsBtn" type="button">换一题</button>
-          </div>
-          <div class="tiny">来自课本里的 `Ford / morning / horse / work / world / sport / short`。</div>
-          <div class="question" id="phonicsPrompt">Which word do you hear?</div>
-          <div class="option-list" id="phonicsOptions"></div>
-          <div class="feedback" id="phonicsFeedback"></div>
-          <div class="button-row" style="margin-top: 10px;">
-            <button class="action secondary" id="speakPhonicsBtn" type="button">朗读题目</button>
-          </div>
+        <div class="tiny">根据课本里的拼读页做听音辨词。</div>
+        <div class="question" id="phonicsQuestion">Which word do you hear?</div>
+        <div class="option-list" id="phonicsOptions"></div>
+        <div class="button-row" style="margin-top:12px;">
+          <button class="action secondary" id="speakPhonicsBtn" type="button">朗读题目</button>
         </div>
-      </div>
+        <div class="feedback" id="phonicsFeedback"></div>
+      </article>
     </section>
   </main>
 
   <script>
-    const activities = [
-      { en: "breakfast", zh: "早餐", emoji: "🥛", time: "7:20", timeline: "7:10 a.m.", sentence: "It's time for breakfast. Let's drink some milk.", slot: "slot-bottom-left" },
-      { en: "English class", zh: "英语课", emoji: "📘", time: "8:30", timeline: "8:30 a.m.", sentence: "It's time for English class. Let's read and write.", slot: "slot-middle-left" },
-      { en: "art class", zh: "美术课", emoji: "🎨", time: "2:10", timeline: "2:10 p.m.", sentence: "It's time for art class. Let's draw a picture.", slot: "slot-top-left" },
-      { en: "lunch", zh: "午餐", emoji: "🍗", time: "12:00", timeline: "12:00 p.m.", sentence: "It's time for lunch. Let's have some chicken.", slot: "slot-top-right" },
-      { en: "maths class", zh: "数学课", emoji: "➕", time: "9:20", timeline: "9:20 a.m.", sentence: "It's time for maths class. Let's count and write.", slot: "slot-middle-right" },
-      { en: "dinner", zh: "晚餐", emoji: "🍚", time: "6:00", timeline: "6:00 p.m.", sentence: "It's time for dinner. Let's eat some rice.", slot: "slot-bottom-right" }
+    const sentenceCards = [
+      { time: "7:00", keyword: "get up", sentence: "It's 7 o'clock. It's time to get up.", zh: "现在 7 点了，该起床了。", note: "来自课本对话页，重点练 `It's time to + 动作`。" },
+      { time: "7:10", keyword: "breakfast", sentence: "Breakfast is ready.", zh: "早餐准备好了。", note: "这是一个很常用的家庭场景句子。" },
+      { time: "7:30", keyword: "go to school", sentence: "It's time to go to school.", zh: "该去上学了。", note: "和具体时间搭配起来说更自然。" },
+      { time: "8:30", keyword: "English class", sentence: "It's 8:30. It's time for English class.", zh: "现在 8 点半了，该上英语课了。", note: "这里要区分 `time to do` 和 `time for 名词`。" },
+      { time: "12:00", keyword: "lunch", sentence: "It's time for lunch.", zh: "到午餐时间了。", note: "餐食和课程通常都用 `It's time for ...`。" },
+      { time: "2:10", keyword: "art class", sentence: "It's time for art class.", zh: "该上美术课了。", note: "可以继续扩展出 `Let's draw a picture.`。" },
+      { time: "5:50", keyword: "go home", sentence: "It's 5:50. It's time to go home.", zh: "现在 5 点 50 分了，该回家了。", note: "这句话来自读写页里的情景题。" },
+      { time: "6:00", keyword: "dinner", sentence: "It's 6 o'clock. It's time for dinner.", zh: "现在 6 点了，该吃晚饭了。", note: "晚餐也是本单元的核心词。" },
+      { time: "9:20", keyword: "go to bed", sentence: "Look at the clock! It's 9:20. Time for bed.", zh: "看看钟！现在 9 点 20 分了，该睡觉了。", note: "课本里还有 `Just a minute.` 这样的补充表达。" }
     ];
 
-    const schedule = [
-      { time: "7:00 a.m.", action: "get up", zh: "起床", sentence: "It's 7 o'clock. It's time to get up." },
-      { time: "7:10 a.m.", action: "breakfast", zh: "吃早餐", sentence: "Breakfast is ready." },
-      { time: "7:30 a.m.", action: "go to school", zh: "去上学", sentence: "It's time to go to school." },
-      { time: "9:20 a.m.", action: "maths class", zh: "上数学课", sentence: "It's time for maths class." },
-      { time: "12:00 p.m.", action: "lunch", zh: "吃午餐", sentence: "It's time for lunch." },
-      { time: "2:10 p.m.", action: "art class", zh: "上美术课", sentence: "It's time for art class." },
-      { time: "5:50 p.m.", action: "go home", zh: "回家", sentence: "It's 5:50. It's time to go home." },
-      { time: "6:00 p.m.", action: "dinner", zh: "吃晚餐", sentence: "It's 6 o'clock. It's time for dinner." },
-      { time: "9:20 p.m.", action: "go to bed", zh: "睡觉", sentence: "Look at the clock! It's 9:20. Time for bed." }
+    const scheduleRows = [
+      { time: "7:00 a.m.", en: "get up", zh: "起床", sentence: "It's 7 o'clock. It's time to get up." },
+      { time: "7:10 a.m.", en: "breakfast", zh: "早餐", sentence: "Breakfast is ready." },
+      { time: "7:30 a.m.", en: "go to school", zh: "去上学", sentence: "It's time to go to school." },
+      { time: "8:30 a.m.", en: "English class", zh: "英语课", sentence: "It's time for English class." },
+      { time: "9:20 a.m.", en: "maths class", zh: "数学课", sentence: "It's time for maths class." },
+      { time: "12:00 p.m.", en: "lunch", zh: "午餐", sentence: "It's time for lunch." },
+      { time: "2:10 p.m.", en: "art class", zh: "美术课", sentence: "It's time for art class." },
+      { time: "5:50 p.m.", en: "go home", zh: "回家", sentence: "It's time to go home." },
+      { time: "6:00 p.m.", en: "dinner", zh: "晚餐", sentence: "It's time for dinner." },
+      { time: "9:20 p.m.", en: "go to bed", zh: "睡觉", sentence: "Time for bed." }
     ];
 
-    const phonicsQuestions = [
-      { prompt: "Which word do you hear?", target: "horse", options: ["fork", "horse"] },
-      { prompt: "Which word do you hear?", target: "word", options: ["word", "worth"] },
-      { prompt: "Which word do you hear?", target: "work", options: ["work", "world"] },
-      { prompt: "Which word do you hear?", target: "short", options: ["sport", "short"] }
+    const dialogues = [
+      [
+        "It's 7 o'clock. It's time to get up.",
+        "Breakfast is ready.",
+        "It's time to go to school. Bye, Mum.",
+        "Bye. Have a nice day!"
+      ],
+      [
+        "It's 8:30. It's time for English class.",
+        "We're ready!",
+        "What time is it?",
+        "It's 7:30. It's time to go to school."
+      ],
+      [
+        "It's 5:50. It's time to go home.",
+        "Oh no! I want to play more!",
+        "Hurry, Mike! It's 8:30. You're late for class.",
+        "Just a minute."
+      ]
     ];
 
-    const builderSentences = [
-      "It's time for breakfast.",
+    const quizData = [
+      { q: "It's 6:00. What is it time for?", answer: "dinner", options: ["breakfast", "English class", "maths class", "dinner"] },
+      { q: "It's 7:30. What is it time for?", answer: "go to school", options: ["go home", "go to school", "go to bed", "breakfast"] },
+      { q: "It's 12:00. What is it time for?", answer: "lunch", options: ["lunch", "art class", "breakfast", "go home"] },
+      { q: "It's 8:30. What is it time for?", answer: "English class", options: ["dinner", "English class", "go to school", "art class"] }
+    ];
+
+    const builderData = [
+      "It's time to get up.",
       "It's time to go to school.",
-      "Let's read and write.",
-      "Let's draw a picture.",
-      "It's time for dinner."
+      "It's time for English class.",
+      "It's time for dinner.",
+      "Have a nice day!"
     ];
 
-    const wordMain = document.getElementById("wordMain");
-    const cnMain = document.getElementById("cnMain");
-    const sentenceMain = document.getElementById("sentenceMain");
-    const hourHand = document.getElementById("hourHand");
-    const minuteHand = document.getElementById("minuteHand");
-    const clockFace = document.getElementById("clockFace");
-    const timelineEl = document.getElementById("timeline");
+    const phonicsData = [
+      { target: "horse", options: ["fork", "horse"] },
+      { target: "word", options: ["word", "worth"] },
+      { target: "work", options: ["work", "world"] },
+      { target: "short", options: ["sport", "short"] }
+    ];
+
+    const focusTime = document.getElementById("focusTime");
+    const focusSentence = document.getElementById("focusSentence");
+    const focusTranslation = document.getElementById("focusTranslation");
+    const focusNote = document.getElementById("focusNote");
+    const scheduleTable = document.getElementById("scheduleTable");
+    const dialogueList = document.getElementById("dialogueList");
     const quizQuestion = document.getElementById("quizQuestion");
     const quizOptions = document.getElementById("quizOptions");
     const quizFeedback = document.getElementById("quizFeedback");
-    const builderBank = document.getElementById("builderBank");
-    const builderTarget = document.getElementById("builderTarget");
-    const builderResult = document.getElementById("builderResult");
-    const phonicsPrompt = document.getElementById("phonicsPrompt");
+    const builderZone = document.getElementById("builderZone");
+    const tokenBank = document.getElementById("tokenBank");
+    const builderFeedback = document.getElementById("builderFeedback");
+    const phonicsQuestion = document.getElementById("phonicsQuestion");
     const phonicsOptions = document.getElementById("phonicsOptions");
     const phonicsFeedback = document.getElementById("phonicsFeedback");
 
-    let activityIndex = 0;
-    let meaningVisible = false;
-    let currentQuiz = null;
-    let currentBuilder = null;
-    let currentPhonics = null;
+    let currentSentenceIndex = 0;
+    let showMeaning = false;
+    let currentDialogueIndex = 0;
+    let currentBuilder = "";
     let builderPicked = [];
+    let currentPhonics = null;
 
     function speak(text) {
       if (!("speechSynthesis" in window)) return;
-      const u = new SpeechSynthesisUtterance(text);
+      const utterance = new SpeechSynthesisUtterance(text);
       const voices = speechSynthesis.getVoices();
-      const v = voices.find(item => /en/i.test(item.lang)) || voices[0];
-      if (v) u.voice = v;
-      u.lang = v?.lang || "en-US";
-      u.rate = 0.9;
-      u.pitch = 1.02;
+      const voice = voices.find(v => /en/i.test(v.lang)) || voices[0];
+      if (voice) utterance.voice = voice;
+      utterance.lang = voice?.lang || "en-US";
+      utterance.rate = 0.9;
+      utterance.pitch = 1.02;
       speechSynthesis.cancel();
-      speechSynthesis.speak(u);
+      speechSynthesis.speak(utterance);
     }
 
-    function drawBubbles() {
-      activities.forEach((item, index) => {
-        const bubble = document.createElement("button");
-        bubble.className = `activity-bubble ${item.slot}`;
-        bubble.innerHTML = `<div class="emoji">${item.emoji}</div><strong>${item.en}</strong><span>${item.time}</span>`;
-        bubble.addEventListener("click", () => {
-          activityIndex = index;
-          meaningVisible = false;
-          renderActivity();
-          speak(item.en);
-        });
-        bubble.dataset.index = String(index);
-        clockFace.appendChild(bubble);
-      });
-    }
-
-    function setClock(timeText) {
-      const [h, m] = timeText.split(":").map(Number);
-      const hourDeg = ((h % 12) + m / 60) * 30;
-      const minuteDeg = m * 6;
-      hourHand.style.transform = `translateY(-50%) rotate(${hourDeg}deg)`;
-      minuteHand.style.transform = `translateY(-50%) rotate(${minuteDeg}deg)`;
-    }
-
-    function renderTimeline() {
-      timelineEl.innerHTML = "";
-      schedule.forEach((item) => {
-        const el = document.createElement("div");
-        el.className = "timeline-item";
-        el.innerHTML = `<div class="time">${item.time}</div><div><strong>${item.action}</strong><div class="tiny">${item.zh}</div></div><button class="action" type="button">朗读</button>`;
-        el.querySelector("button").addEventListener("click", () => speak(item.sentence));
-        timelineEl.appendChild(el);
-      });
-    }
-
-    function renderActivity() {
-      const item = activities[activityIndex];
-      wordMain.textContent = item.en;
-      cnMain.textContent = meaningVisible ? item.zh : "先自己回想中文";
-      sentenceMain.textContent = item.sentence;
-      setClock(item.time);
-      clockFace.querySelectorAll(".activity-bubble").forEach((bubble) => {
-        bubble.classList.toggle("active", bubble.dataset.index === String(activityIndex));
-      });
-      timelineEl.querySelectorAll(".timeline-item").forEach((row) => {
-        const active = row.textContent.includes(item.en) || row.textContent.includes(item.zh);
-        row.classList.toggle("active", active);
-      });
-      document.getElementById("revealBtn").textContent = meaningVisible ? "藏中文" : "看中文";
-    }
-
-    function shuffle(list) {
-      const arr = [...list];
-      for (let i = arr.length - 1; i > 0; i--) {
+    function shuffle(arr) {
+      const list = [...arr];
+      for (let i = list.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
+        [list[i], list[j]] = [list[j], list[i]];
       }
-      return arr;
+      return list;
+    }
+
+    function renderSentence() {
+      const item = sentenceCards[currentSentenceIndex];
+      focusTime.textContent = item.time;
+      focusSentence.textContent = item.sentence;
+      focusTranslation.textContent = showMeaning ? item.zh : "先自己想一想中文意思";
+      focusNote.textContent = item.note;
+      document.getElementById("toggleMeaningBtn").textContent = showMeaning ? "藏中文" : "看中文";
+      scheduleTable.querySelectorAll(".schedule-row").forEach((row, index) => {
+        row.classList.toggle("active", index === currentSentenceIndex);
+      });
+    }
+
+    function renderSchedule() {
+      scheduleTable.innerHTML = "";
+      scheduleRows.forEach((item, index) => {
+        const row = document.createElement("button");
+        row.className = "schedule-row";
+        row.innerHTML = `<div class="schedule-time">${item.time}</div><div class="schedule-main"><strong>${item.en}</strong><span>${item.zh}</span></div><span>朗读</span>`;
+        row.addEventListener("click", () => {
+          currentSentenceIndex = Math.min(index, sentenceCards.length - 1);
+          showMeaning = false;
+          renderSentence();
+          speak(item.sentence);
+        });
+        scheduleTable.appendChild(row);
+      });
+    }
+
+    function renderDialogues() {
+      dialogueList.innerHTML = "";
+      const lines = dialogues[currentDialogueIndex];
+      const card = document.createElement("div");
+      card.className = "dialogue-card";
+      card.innerHTML = `<h3>课本句子组 ${currentDialogueIndex + 1}</h3>`;
+      lines.forEach((line) => {
+        const el = document.createElement("div");
+        el.className = "line";
+        el.textContent = line;
+        el.addEventListener("click", () => speak(line));
+        card.appendChild(el);
+      });
+      dialogueList.appendChild(card);
     }
 
     function newQuiz() {
-      const item = activities[Math.floor(Math.random() * activities.length)];
-      const distractors = shuffle(activities.filter((x) => x.en !== item.en)).slice(0, 3).map((x) => x.en);
-      currentQuiz = { answer: item.en, time: item.time };
-      quizQuestion.textContent = `It’s ${item.time}. What is it time for?`;
+      const item = quizData[Math.floor(Math.random() * quizData.length)];
+      quizQuestion.textContent = item.q;
       quizFeedback.textContent = "";
       quizOptions.innerHTML = "";
-      shuffle([item.en, ...distractors]).forEach((opt) => {
+      shuffle(item.options).forEach((opt) => {
         const btn = document.createElement("button");
         btn.className = "option";
         btn.textContent = opt;
         btn.addEventListener("click", () => {
-          const correct = opt === currentQuiz.answer;
+          const correct = opt === item.answer;
           btn.classList.add(correct ? "correct" : "wrong");
-          quizFeedback.textContent = correct ? "答对了，这个时间对应得很准。" : `再试试，正确答案是 ${currentQuiz.answer}。`;
-          if (correct) speak(`It's ${item.time}. It's time for ${item.en}.`);
+          quizFeedback.textContent = correct ? "答对了。" : `正确答案是 ${item.answer}。`;
         });
         quizOptions.appendChild(btn);
       });
     }
 
     function renderBuilder() {
-      builderBank.innerHTML = "";
-      builderTarget.innerHTML = "";
-      builderResult.textContent = "";
       builderPicked = [];
-      currentBuilder = builderSentences[Math.floor(Math.random() * builderSentences.length)];
-      shuffle(currentBuilder.replace(".", "").split(" ")).forEach((word) => {
+      currentBuilder = builderData[Math.floor(Math.random() * builderData.length)];
+      tokenBank.innerHTML = "";
+      builderZone.innerHTML = "<span class='tiny'>把词块放到这里，拼成完整句子。</span>";
+      builderFeedback.textContent = "";
+      shuffle(currentBuilder.replace(/[.!]/g, "").split(" ")).forEach((word) => {
         const btn = document.createElement("button");
-        btn.className = "word-token";
+        btn.className = "token";
         btn.textContent = word;
         btn.addEventListener("click", () => {
           builderPicked.push(word);
           btn.disabled = true;
-          btn.style.opacity = "0.42";
-          renderBuilderTarget();
+          btn.style.opacity = "0.45";
+          updateBuilderZone();
         });
-        builderBank.appendChild(btn);
+        tokenBank.appendChild(btn);
       });
-      renderBuilderTarget();
     }
 
-    function renderBuilderTarget() {
-      builderTarget.innerHTML = builderPicked.length ? "" : "<span class='tiny'>把词块点到这里，拼成完整句子。</span>";
-      builderPicked.forEach((word, index) => {
+    function updateBuilderZone() {
+      builderZone.innerHTML = "";
+      if (!builderPicked.length) {
+        builderZone.innerHTML = "<span class='tiny'>把词块放到这里，拼成完整句子。</span>";
+        return;
+      }
+      builderPicked.forEach((word) => {
         const chip = document.createElement("button");
-        chip.className = "word-token";
+        chip.className = "token";
         chip.textContent = word;
-        chip.addEventListener("click", () => {
-          builderPicked.splice(index, 1);
-          renderBuilder();
-          builderPicked = currentBuilder ? builderPicked : [];
-        });
-        builderTarget.appendChild(chip);
+        builderZone.appendChild(chip);
       });
     }
 
     function checkBuilder() {
-      const built = `${builderPicked.join(" ")}.`.replace(" .", ".");
-      if (built === currentBuilder) {
-        builderResult.textContent = "拼对了，句子完整。";
+      const sentence = `${builderPicked.join(" ")}${currentBuilder.endsWith("!") ? "!" : "."}`.replace(" .", ".");
+      if (sentence === currentBuilder) {
+        builderFeedback.textContent = "拼对了。";
         speak(currentBuilder);
       } else {
-        builderResult.textContent = `还差一点，目标句子是：${currentBuilder}`;
+        builderFeedback.textContent = `再试试，目标句子是：${currentBuilder}`;
       }
     }
 
-    function resetBuilder() {
-      renderBuilder();
-    }
-
     function newPhonics() {
-      currentPhonics = phonicsQuestions[Math.floor(Math.random() * phonicsQuestions.length)];
-      phonicsPrompt.textContent = `${currentPhonics.prompt} (${currentPhonics.target.length} letters)`;
+      currentPhonics = phonicsData[Math.floor(Math.random() * phonicsData.length)];
+      phonicsQuestion.textContent = "Which word do you hear?";
       phonicsFeedback.textContent = "";
       phonicsOptions.innerHTML = "";
       currentPhonics.options.forEach((opt) => {
@@ -842,56 +723,48 @@
         btn.addEventListener("click", () => {
           const correct = opt === currentPhonics.target;
           btn.classList.add(correct ? "correct" : "wrong");
-          phonicsFeedback.textContent = correct ? "很好，这个 or 单词读对了。" : `再听一遍，答案是 ${currentPhonics.target}。`;
+          phonicsFeedback.textContent = correct ? "很好，读音选对了。" : `正确答案是 ${currentPhonics.target}。`;
         });
         phonicsOptions.appendChild(btn);
       });
     }
 
-    document.querySelectorAll(".chip").forEach((chip) => {
-      chip.addEventListener("click", () => {
-        document.querySelectorAll(".chip").forEach((x) => x.classList.remove("active"));
-        chip.classList.add("active");
-        const target = chip.dataset.tab;
-        if (target === "time") window.scrollTo({ top: 0, behavior: "smooth" });
-        if (target === "schedule") timelineEl.scrollIntoView({ behavior: "smooth", block: "center" });
-        if (target === "builder") builderBank.scrollIntoView({ behavior: "smooth", block: "center" });
-        if (target === "phonics") phonicsOptions.scrollIntoView({ behavior: "smooth", block: "center" });
-      });
-    });
-
     document.getElementById("prevBtn").addEventListener("click", () => {
-      activityIndex = (activityIndex - 1 + activities.length) % activities.length;
-      meaningVisible = false;
-      renderActivity();
-      speak(activities[activityIndex].en);
+      currentSentenceIndex = (currentSentenceIndex - 1 + sentenceCards.length) % sentenceCards.length;
+      showMeaning = false;
+      renderSentence();
+      speak(sentenceCards[currentSentenceIndex].sentence);
     });
 
     document.getElementById("nextBtn").addEventListener("click", () => {
-      activityIndex = (activityIndex + 1) % activities.length;
-      meaningVisible = false;
-      renderActivity();
-      speak(activities[activityIndex].en);
+      currentSentenceIndex = (currentSentenceIndex + 1) % sentenceCards.length;
+      showMeaning = false;
+      renderSentence();
+      speak(sentenceCards[currentSentenceIndex].sentence);
     });
 
-    document.getElementById("revealBtn").addEventListener("click", () => {
-      meaningVisible = !meaningVisible;
-      renderActivity();
+    document.getElementById("toggleMeaningBtn").addEventListener("click", () => {
+      showMeaning = !showMeaning;
+      renderSentence();
     });
 
-    document.getElementById("speakCurrentBtn").addEventListener("click", () => speak(activities[activityIndex].sentence));
-    document.getElementById("speakWordBtn").addEventListener("click", () => speak(activities[activityIndex].en));
-    document.getElementById("speakSentenceBtn").addEventListener("click", () => speak(activities[activityIndex].sentence));
+    document.getElementById("speakCurrentBtn").addEventListener("click", () => speak(sentenceCards[currentSentenceIndex].sentence));
+    document.getElementById("speakSentenceBtn").addEventListener("click", () => speak(sentenceCards[currentSentenceIndex].sentence));
+    document.getElementById("speakWordBtn").addEventListener("click", () => speak(sentenceCards[currentSentenceIndex].keyword));
+    document.getElementById("nextDialogueBtn").addEventListener("click", () => {
+      currentDialogueIndex = (currentDialogueIndex + 1) % dialogues.length;
+      renderDialogues();
+    });
     document.getElementById("newQuizBtn").addEventListener("click", newQuiz);
     document.getElementById("newBuilderBtn").addEventListener("click", renderBuilder);
     document.getElementById("checkBuilderBtn").addEventListener("click", checkBuilder);
-    document.getElementById("resetBuilderBtn").addEventListener("click", resetBuilder);
+    document.getElementById("resetBuilderBtn").addEventListener("click", renderBuilder);
     document.getElementById("newPhonicsBtn").addEventListener("click", newPhonics);
     document.getElementById("speakPhonicsBtn").addEventListener("click", () => currentPhonics && speak(currentPhonics.target));
 
-    drawBubbles();
-    renderTimeline();
-    renderActivity();
+    renderSchedule();
+    renderSentence();
+    renderDialogues();
     newQuiz();
     renderBuilder();
     newPhonics();

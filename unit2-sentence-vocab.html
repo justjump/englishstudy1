@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>小朋友背单词乐园</title>
+  <title>时间与课程新词乐园</title>
   <style>
     :root {
       --bg: #fff9ef;
@@ -559,26 +559,26 @@
     <section class="hero">
       <div class="hero-top">
         <div class="hero-title">
-          <span class="badge">识别自图片 40 个单词</span>
-          <h1>小朋友背单词乐园</h1>
+          <span class="badge">句子里提炼的 20 个新词</span>
+          <h1>时间与课程新词乐园</h1>
         </div>
         <div class="stats">
           <div class="stat">
-            <strong id="totalCount">40</strong>
+            <strong id="totalCount">20</strong>
             <span>总单词</span>
           </div>
           <div class="stat">
-            <strong id="shownCount">40</strong>
+            <strong id="shownCount">20</strong>
             <span>当前显示</span>
           </div>
           <div class="stat">
-            <strong id="currentIndexLabel">1 / 40</strong>
+            <strong id="currentIndexLabel">1 / 20</strong>
             <span>学习进度</span>
           </div>
         </div>
         <div class="section-actions">
+          <a class="action secondary" href="./index.html" style="text-decoration:none;">旧单词页</a>
           <a class="action secondary" href="./unit2-time-routines.html" style="text-decoration:none;">句子练习页</a>
-          <a class="action secondary" href="./unit2-sentence-vocab.html" style="text-decoration:none;">新词记忆页</a>
           <button class="action" id="toggleSettingsBtn" type="button">学习设置</button>
         </div>
       </div>
@@ -597,7 +597,7 @@
           </div>
           <div class="panel-body">
             <div class="search" style="margin-top: 14px;">
-              <input id="searchInput" type="text" placeholder="搜索英文或中文，例如 school / 衣服" />
+              <input id="searchInput" type="text" placeholder="搜索英文或中文，例如 breakfast / late / class" />
             </div>
             <div class="chip-row" id="categoryChips"></div>
             <label class="switch">
@@ -621,12 +621,12 @@
           <button class="mini-action" id="focusCardBtn" type="button">只看此板块</button>
         </div>
         <div class="scene" id="scene">
-          <div class="emoji" id="emojiBox">📘</div>
+          <div class="emoji" id="emojiBox">⏰</div>
         </div>
-        <h2 class="word" id="wordText">work</h2>
-        <div class="phonetic" id="phoneticText">/w3:k/</div>
-        <p class="meaning" id="meaningText">（花费时间和精力）做（某事）；工作</p>
-        <div class="mini-note" id="hintText">点“发音”听单词，点“显示/隐藏中文”练记忆。</div>
+        <h2 class="word" id="wordText">breakfast</h2>
+        <div class="phonetic" id="phoneticText">/ˈbrekfəst/</div>
+        <p class="meaning" id="meaningText">早餐</p>
+        <div class="mini-note" id="hintText">这页的词来自句子内容，适合先记关键词，再回去练整句。</div>
         <div class="button-row" style="margin-top: 20px;">
           <button class="action" id="prevBtn">上一个</button>
           <button class="action primary" id="speakBtn">发音</button>
@@ -672,46 +672,26 @@
 
   <script>
     const words = [
-      { id: 41, en: "work", zh: "（花费时间和精力）做（某事）；工作", phonetic: "/w3:k/", category: "日常动作", emoji: "💼", scene: "linear-gradient(135deg, #ffe0b5, #ffd45b)", hint: "想一想大人去工作，或者你认真做作业。"},
-      { id: 42, en: "think", zh: "想；思考", phonetic: "/θɪŋk/", category: "日常动作", emoji: "🤔", scene: "linear-gradient(135deg, #d9ebff, #bde0ff)", hint: "小脑袋转一转，就是 think。"},
-      { id: 43, en: "hard", zh: "努力地；费力地", phonetic: "/hɑːd/", category: "日常动作", emoji: "💪", scene: "linear-gradient(135deg, #ffd6d6, #ffb36a)", hint: "认真用力做事情，就是 hard。"},
-      { id: 44, en: "follow", zh: "遵循；听从", phonetic: "/ˈfɒləʊ/", category: "日常动作", emoji: "🚶", scene: "linear-gradient(135deg, #dff6df, #b7efc5)", hint: "跟着老师或爸爸妈妈一起做。"},
-      { id: 45, en: "feel", zh: "觉得；感到", phonetic: "/fiːl/", category: "日常动作", emoji: "❤️", scene: "linear-gradient(135deg, #ffd7ef, #ffc1d6)", hint: "开心、难过、冷或热，都是 feel。"},
-      { id: 46, en: "over", zh: "结束（的）", phonetic: "/ˈəʊvə(r)/", category: "日常动作", emoji: "🏁", scene: "linear-gradient(135deg, #d8f1ff, #f8e8a6)", hint: "比赛结束啦，可以说 it is over。"},
-      { id: 47, en: "kid", zh: "小孩", phonetic: "/kɪd/", category: "人物生活", emoji: "🧒", scene: "linear-gradient(135deg, #ffe7bc, #ffd2e1)", hint: "小朋友就是 kid。"},
-      { id: 48, en: "dinner", zh: "正餐；晚餐", phonetic: "/ˈdɪnə(r)/", category: "人物生活", emoji: "🍽️", scene: "linear-gradient(135deg, #fff2c8, #ffd39f)", hint: "晚上吃饭时，就是 dinner。"},
-      { id: 49, en: "art", zh: "美术；艺术", phonetic: "/ɑːt/", category: "学校生活", emoji: "🎨", scene: "linear-gradient(135deg, #d8f4ff, #ffd6f0)", hint: "画画、做手工，都和 art 有关。"},
-      { id: 50, en: "lunch", zh: "午餐", phonetic: "/lʌntʃ/", category: "人物生活", emoji: "🥪", scene: "linear-gradient(135deg, #fff0be, #ffcf96)", hint: "中午吃的那一餐叫 lunch。"},
-      { id: 51, en: "maths", zh: "数学", phonetic: "/mæθs/", category: "学校生活", emoji: "➕", scene: "linear-gradient(135deg, #d6efff, #b0d7ff)", hint: "加减乘除就是 maths。"},
-      { id: 52, en: "get up", zh: "起床", phonetic: "/get ʌp/", category: "日常动作", emoji: "⏰", scene: "linear-gradient(135deg, #ffe3b3, #fff3da)", hint: "早上从床上起来，就是 get up。"},
-      { id: 53, en: "go to school", zh: "上学", phonetic: "/gəʊ tə skuːl/", category: "学校生活", emoji: "🏫", scene: "linear-gradient(135deg, #d7f7e3, #cce0ff)", hint: "背上书包去学校。"},
-      { id: 54, en: "go home", zh: "回家", phonetic: "/gəʊ həʊm/", category: "日常动作", emoji: "🏠", scene: "linear-gradient(135deg, #ffe1bf, #ffcdd7)", hint: "放学以后回家，就是 go home。"},
-      { id: 55, en: "go to bed", zh: "上床睡觉", phonetic: "/gəʊ tə bed/", category: "日常动作", emoji: "🛏️", scene: "linear-gradient(135deg, #dce2ff, #ffd8ee)", hint: "晚上钻进被窝睡觉。"},
-      { id: 56, en: "want", zh: "想要", phonetic: "/wɒnt/", category: "日常动作", emoji: "⭐", scene: "linear-gradient(135deg, #fff0b0, #ffd0a8)", hint: "我想要一个玩具，可以说 I want a toy。"},
-      { id: 57, en: "clock", zh: "时钟", phonetic: "/klɒk/", category: "物品时间", emoji: "🕒", scene: "linear-gradient(135deg, #daf0ff, #ffe7aa)", hint: "墙上会走的钟就是 clock。"},
-      { id: 58, en: "just", zh: "只是；仅仅；正要", phonetic: "/dʒʌst/", category: "常用词", emoji: "✨", scene: "linear-gradient(135deg, #fff0d8, #fff8ec)", hint: "just 常常表示‘只是’。"},
-      { id: 59, en: "minute", zh: "分钟", phonetic: "/ˈmɪnɪt/", category: "物品时间", emoji: "⏱️", scene: "linear-gradient(135deg, #d5eeff, #bfe4ff)", hint: "一分钟很短，minute。"},
-      { id: 60, en: "trousers", zh: "裤子", phonetic: "/ˈtraʊzəz/", category: "衣物购物", emoji: "👖", scene: "linear-gradient(135deg, #d8ecff, #c7d7ff)", hint: "长裤就是 trousers。"},
-      { id: 61, en: "pair", zh: "一条；一副", phonetic: "/peə(r)/", category: "衣物购物", emoji: "🧦", scene: "linear-gradient(135deg, #fff2d2, #ffe0f3)", hint: "两只一起配成一对，就是 a pair。"},
-      { id: 62, en: "clothes", zh: "衣服；服装", phonetic: "/kləʊðz/", category: "衣物购物", emoji: "👕", scene: "linear-gradient(135deg, #fff0be, #ffd7cf)", hint: "穿在身上的统称 clothes。"},
-      { id: 63, en: "shorts", zh: "短裤", phonetic: "/ʃɔːts/", category: "衣物购物", emoji: "🩳", scene: "linear-gradient(135deg, #ffe1c1, #fff0a6)", hint: "夏天常穿的短裤。"},
-      { id: 64, en: "jacket", zh: "夹克衫", phonetic: "/ˈdʒækɪt/", category: "衣物购物", emoji: "🧥", scene: "linear-gradient(135deg, #dfe8ff, #c9efff)", hint: "外面穿的一件 jacket。"},
-      { id: 65, en: "skirt", zh: "裙子", phonetic: "/skɜːt/", category: "衣物购物", emoji: "👗", scene: "linear-gradient(135deg, #ffd7ef, #ffecbe)", hint: "裙子就是 skirt。"},
-      { id: 66, en: "dear", zh: "天哪", phonetic: "/dɪə(r)/", category: "常用词", emoji: "😮", scene: "linear-gradient(135deg, #ffe4be, #ffd6d6)", hint: "表示惊讶时会说 oh dear。"},
-      { id: 67, en: "expensive", zh: "昂贵的；价格高的", phonetic: "/ɪkˈspensɪv/", category: "衣物购物", emoji: "💎", scene: "linear-gradient(135deg, #d7e6ff, #edf4ff)", hint: "价格很高，就是 expensive。"},
-      { id: 68, en: "take", zh: "买下", phonetic: "/teɪk/", category: "衣物购物", emoji: "🛍️", scene: "linear-gradient(135deg, #fff2c8, #ffcfd8)", hint: "买这个吧，I will take it。"},
-      { id: 69, en: "cheap", zh: "便宜的", phonetic: "/tʃiːp/", category: "衣物购物", emoji: "🏷️", scene: "linear-gradient(135deg, #dff5d6, #fff3bf)", hint: "不贵，很便宜，就是 cheap。"},
-      { id: 70, en: "shoe", zh: "鞋", phonetic: "/ʃuː/", category: "衣物购物", emoji: "👟", scene: "linear-gradient(135deg, #dcecff, #ffe3bf)", hint: "脚上穿的 shoe。"},
-      { id: 71, en: "beautiful", zh: "美丽的", phonetic: "/ˈbjuːtɪfl/", category: "常用词", emoji: "🌸", scene: "linear-gradient(135deg, #ffd9eb, #fff1c0)", hint: "漂亮、美丽，就是 beautiful。"},
-      { id: 72, en: "hat", zh: "帽子", phonetic: "/hæt/", category: "衣物购物", emoji: "🧢", scene: "linear-gradient(135deg, #d9f0ff, #fff0ba)", hint: "头上戴的帽子。"},
-      { id: 73, en: "sunglasses", zh: "太阳镜；墨镜", phonetic: "/ˈsʌnɡlɑːsɪz/", category: "衣物购物", emoji: "🕶️", scene: "linear-gradient(135deg, #d6f3ff, #bfe0ff)", hint: "太阳很大时戴 sunglasses。"},
-      { id: 74, en: "free", zh: "免费的", phonetic: "/friː/", category: "衣物购物", emoji: "🎁", scene: "linear-gradient(135deg, #e1ffd9, #fff3b5)", hint: "不用花钱，就是 free。"},
-      { id: 75, en: "large", zh: "大型号的", phonetic: "/lɑːdʒ/", category: "衣物购物", emoji: "📦", scene: "linear-gradient(135deg, #ffebc4, #ffd8a8)", hint: "很大号，可以说 large。"},
-      { id: 76, en: "size", zh: "尺码；号", phonetic: "/saɪz/", category: "衣物购物", emoji: "📏", scene: "linear-gradient(135deg, #d7eaff, #e3f8ff)", hint: "衣服鞋子的号码叫 size。"},
-      { id: 77, en: "list", zh: "清单；目录", phonetic: "/lɪst/", category: "常用词", emoji: "📝", scene: "linear-gradient(135deg, #fff5cf, #e0f2ff)", hint: "把东西写成一张 list。"},
-      { id: 78, en: "try on", zh: "试穿", phonetic: "/traɪ ɒn/", category: "衣物购物", emoji: "🪞", scene: "linear-gradient(135deg, #ffdfe8, #f3efff)", hint: "买衣服前先 try on。"},
-      { id: 79, en: "any", zh: "任何的；任一的", phonetic: "/ˈeni/", category: "常用词", emoji: "🎲", scene: "linear-gradient(135deg, #dff0ff, #fff0c0)", hint: "任何一个，都可以用 any。"},
-      { id: 80, en: "cow", zh: "奶牛", phonetic: "/kaʊ/", category: "动物", emoji: "🐄", scene: "linear-gradient(135deg, #f5f5f5, #ffeec4)", hint: "会哞哞叫的 cow。"}
+      { id: 101, en: "breakfast", zh: "早餐", phonetic: "/ˈbrekfəst/", category: "餐食时间", emoji: "🥛", scene: "linear-gradient(135deg, #fff4bf, #ffe2a8)", hint: "早晨吃的这一餐就是 breakfast。" },
+      { id: 102, en: "lunch", zh: "午餐", phonetic: "/lʌntʃ/", category: "餐食时间", emoji: "🍗", scene: "linear-gradient(135deg, #fff0c5, #ffd59e)", hint: "中午吃饭时，就是 lunch。" },
+      { id: 103, en: "dinner", zh: "晚餐", phonetic: "/ˈdɪnə(r)/", category: "餐食时间", emoji: "🍚", scene: "linear-gradient(135deg, #ffe6c8, #ffd6b5)", hint: "晚上吃的正餐叫 dinner。" },
+      { id: 104, en: "get up", zh: "起床", phonetic: "/get ʌp/", category: "作息动作", emoji: "⏰", scene: "linear-gradient(135deg, #e4f2ff, #cfe5ff)", hint: "闹钟响了，从床上起来就是 get up。" },
+      { id: 105, en: "go to school", zh: "去上学", phonetic: "/gəʊ tə skuːl/", category: "作息动作", emoji: "🏫", scene: "linear-gradient(135deg, #dcf7e5, #c8ebd8)", hint: "背上书包出门去学校。" },
+      { id: 106, en: "go home", zh: "回家", phonetic: "/gəʊ həʊm/", category: "作息动作", emoji: "🏠", scene: "linear-gradient(135deg, #ffe8d2, #ffd6c6)", hint: "放学以后回家，就是 go home。" },
+      { id: 107, en: "go to bed", zh: "上床睡觉", phonetic: "/gəʊ tə bed/", category: "作息动作", emoji: "🛏️", scene: "linear-gradient(135deg, #e6e8ff, #d8d9f9)", hint: "晚上该睡觉了，可以说 go to bed。" },
+      { id: 108, en: "English class", zh: "英语课", phonetic: "/ˈɪŋglɪʃ klɑːs/", category: "课程活动", emoji: "📘", scene: "linear-gradient(135deg, #dff2ff, #cfe5ff)", hint: "读和写的那节课，就是 English class。" },
+      { id: 109, en: "maths class", zh: "数学课", phonetic: "/mæθs klɑːs/", category: "课程活动", emoji: "➕", scene: "linear-gradient(135deg, #e5f7ff, #d0ecff)", hint: "数数、写数字的那节课。" },
+      { id: 110, en: "art class", zh: "美术课", phonetic: "/ɑːt klɑːs/", category: "课程活动", emoji: "🎨", scene: "linear-gradient(135deg, #ffe6f2, #ffd6ec)", hint: "画画的课，就是 art class。" },
+      { id: 111, en: "ready", zh: "准备好了的", phonetic: "/ˈredi/", category: "课堂表达", emoji: "✅", scene: "linear-gradient(135deg, #e9ffd8, #d6f3bf)", hint: "Breakfast is ready. 或者 We're ready! 里面都有 ready。" },
+      { id: 112, en: "late", zh: "迟到的；晚的", phonetic: "/leɪt/", category: "课堂表达", emoji: "⏳", scene: "linear-gradient(135deg, #fff1d8, #ffe0bf)", hint: "You're late for class. 就是在说迟到了。" },
+      { id: 113, en: "class", zh: "课；课堂", phonetic: "/klɑːs/", category: "课堂表达", emoji: "🏷️", scene: "linear-gradient(135deg, #f1f5ff, #dde8ff)", hint: "English class、maths class、art class 里都有 class。" },
+      { id: 114, en: "school", zh: "学校", phonetic: "/skuːl/", category: "课堂表达", emoji: "🎒", scene: "linear-gradient(135deg, #e2f7e7, #d0f0d9)", hint: "go to school 里最重要的地点词。" },
+      { id: 115, en: "clock", zh: "钟；时钟", phonetic: "/klɒk/", category: "时间表达", emoji: "🕒", scene: "linear-gradient(135deg, #e1f0ff, #d1e5ff)", hint: "Look at the clock! 里的 clock 就是时钟。" },
+      { id: 116, en: "time", zh: "时间；……的时候", phonetic: "/taɪm/", category: "时间表达", emoji: "⌚", scene: "linear-gradient(135deg, #fff4d6, #ffe6a6)", hint: "What time is it? 和 It's time for ... 都有 time。" },
+      { id: 117, en: "read and write", zh: "读和写", phonetic: "/riːd ænd raɪt/", category: "课堂表达", emoji: "📝", scene: "linear-gradient(135deg, #edf5ff, #dcecff)", hint: "英语课里经常出现 read and write。" },
+      { id: 118, en: "draw a picture", zh: "画一幅画", phonetic: "/drɔː ə ˈpɪktʃə(r)/", category: "课程活动", emoji: "🖍️", scene: "linear-gradient(135deg, #ffeaf3, #ffd8e7)", hint: "It's time for art class. Let's draw a picture." },
+      { id: 119, en: "count and write", zh: "数一数并写一写", phonetic: "/kaʊnt ænd raɪt/", category: "课程活动", emoji: "🔢", scene: "linear-gradient(135deg, #e7f6ff, #d7ecff)", hint: "maths class 对应的动作就是 count and write。" },
+      { id: 120, en: "have a nice day", zh: "祝你今天愉快", phonetic: "/hæv ə naɪs deɪ/", category: "课堂表达", emoji: "☀️", scene: "linear-gradient(135deg, #fff6d6, #ffe8a6)", hint: "出门告别时很常见的一句话。" }
     ];
 
     const categories = ["全部", ...new Set(words.map(item => item.category))];
