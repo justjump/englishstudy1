@@ -529,6 +529,38 @@
       font-weight: 600;
     }
 
+    .quiz-tools {
+      margin: 12px 0;
+    }
+
+    .quiz-note-panel {
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.72);
+      border: 2px solid rgba(30, 43, 58, 0.08);
+    }
+
+    .quiz-note-panel label {
+      display: block;
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .quiz-note-input {
+      width: 100%;
+      min-height: 78px;
+      resize: vertical;
+      border: 2px solid rgba(30, 43, 58, 0.1);
+      border-radius: 14px;
+      padding: 10px 12px;
+      font: inherit;
+      color: var(--ink);
+      background: rgba(255,255,255,0.96);
+      outline: none;
+    }
+
     .list-panel {
       margin-top: 0;
     }
@@ -796,6 +828,15 @@
             <button class="action" id="speakQuizBtn">朗读题目</button>
           </div>
           <p class="quiz-answer" id="quizAnswer"></p>
+          <div class="card-tools quiz-tools">
+            <button class="action secondary" id="quizMistakeBtn" type="button">标记为易错词</button>
+            <span class="status-pill" id="quizMistakeStatus">未标记易错</span>
+          </div>
+          <div class="quiz-note-panel">
+            <label for="quizWordNoteInput">这道题的备注</label>
+            <textarea class="quiz-note-input" id="quizWordNoteInput" placeholder="给当前测验单词记一点提示……"></textarea>
+            <div class="note-meta" id="quizWordNoteMeta">自动保存到本机浏览器。</div>
+          </div>
           <label class="switch">
             <input id="autoSpeakQuiz" type="checkbox" checked />
             <span>新题默认发音</span>
@@ -905,6 +946,10 @@
     const quizAnswer = document.getElementById("quizAnswer");
     const quizModeChips = document.getElementById("quizModeChips");
     const quizModeHint = document.getElementById("quizModeHint");
+    const quizMistakeBtn = document.getElementById("quizMistakeBtn");
+    const quizMistakeStatus = document.getElementById("quizMistakeStatus");
+    const quizWordNoteInput = document.getElementById("quizWordNoteInput");
+    const quizWordNoteMeta = document.getElementById("quizWordNoteMeta");
 
     let selectedCategory = "全部";
     let keyword = "";
@@ -918,6 +963,7 @@
     let soloSection = null;
     let quizMode = "all";
     let noteSaveTimer = null;
+    let quizNoteSaveTimer = null;
     let quizPools = { all: [], mistakes: [] };
     let quizLastWordId = { all: null, mistakes: null };
 
@@ -1010,6 +1056,26 @@
           ? `当前测验全部单词，共 ${allCount} 个；同一轮会尽量不重复。`
           : "当前没有可测验的单词，试试清空搜索或切换分类。";
       }
+    }
+
+    function getWordById(id) {
+      return words.find(item => String(item.id) === String(id)) || null;
+    }
+
+    function updateQuizMeta(item) {
+      if (!item) {
+        quizMistakeBtn.textContent = "标记为易错词";
+        quizMistakeStatus.textContent = "未标记易错";
+        quizMistakeStatus.className = "status-pill";
+        quizWordNoteInput.value = "";
+        quizWordNoteMeta.textContent = "自动保存到本机浏览器。";
+        return;
+      }
+      quizMistakeBtn.textContent = isMistakeWord(item.id) ? "取消易错标记" : "标记为易错词";
+      quizMistakeStatus.textContent = isMistakeWord(item.id) ? "已标记为易错词" : "未标记易错";
+      quizMistakeStatus.className = `status-pill${isMistakeWord(item.id) ? " danger" : ""}`;
+      quizWordNoteInput.value = getWordNote(item.id);
+      quizWordNoteMeta.textContent = getWordNote(item.id) ? "备注已自动保存到本机浏览器。" : "自动保存到本机浏览器。";
     }
 
     function renderQuizModeChips() {
@@ -1257,6 +1323,8 @@
         quizAnswer.textContent = "";
         quizAnswer.dataset.answer = "";
         quizAnswer.dataset.word = "";
+        quizAnswer.dataset.wordId = "";
+        updateQuizMeta(null);
         updateQuizModeHint();
         renderQuizModeChips();
         return;
@@ -1266,6 +1334,8 @@
       quizAnswer.textContent = "";
       quizAnswer.dataset.answer = `${item.zh} ${item.phonetic}`;
       quizAnswer.dataset.word = item.en;
+      quizAnswer.dataset.wordId = String(item.id);
+      updateQuizMeta(item);
       updateQuizModeHint();
       renderQuizModeChips();
       if (autoSpeakQuiz.checked) speak(item.en);
@@ -1296,6 +1366,37 @@
         setWordNote(item.id, noteValue);
         wordNoteMeta.textContent = noteValue.trim() ? "备注已自动保存到本机浏览器。" : "自动保存到本机浏览器。";
         renderWordList();
+      }, 220);
+    }
+
+    function toggleQuizMistake() {
+      const item = getWordById(quizAnswer.dataset.wordId);
+      if (!item) return;
+      if (isMistakeWord(item.id)) {
+        delete mistakeMap[item.id];
+      } else {
+        mistakeMap[item.id] = true;
+      }
+      saveStoredObject(mistakeStorageKey, mistakeMap);
+      invalidateQuizPools();
+      renderCard();
+      renderWordList();
+      renderQuizModeChips();
+      updateQuizModeHint();
+      updateQuizMeta(item);
+    }
+
+    function scheduleQuizNoteSave() {
+      const item = getWordById(quizAnswer.dataset.wordId);
+      if (!item) return;
+      const noteValue = quizWordNoteInput.value;
+      clearTimeout(quizNoteSaveTimer);
+      quizNoteSaveTimer = setTimeout(() => {
+        setWordNote(item.id, noteValue);
+        quizWordNoteMeta.textContent = noteValue.trim() ? "备注已自动保存到本机浏览器。" : "自动保存到本机浏览器。";
+        renderCard();
+        renderWordList();
+        updateQuizMeta(item);
       }, 220);
     }
 
@@ -1349,6 +1450,9 @@
     mistakeBtn.addEventListener("click", toggleCurrentMistake);
     wordNoteInput.addEventListener("input", scheduleNoteSave);
     wordNoteInput.addEventListener("blur", scheduleNoteSave);
+    quizMistakeBtn.addEventListener("click", toggleQuizMistake);
+    quizWordNoteInput.addEventListener("input", scheduleQuizNoteSave);
+    quizWordNoteInput.addEventListener("blur", scheduleQuizNoteSave);
 
     document.getElementById("flipBtn").addEventListener("click", () => {
       meaningVisible = !meaningVisible;
